@@ -17,6 +17,7 @@ class GradutationPage: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        print(graduationDate.date)
         
     }
     
@@ -31,5 +32,35 @@ class GradutationPage: UIViewController {
     }
     @IBAction func next(_ sender: AnyObject) {
     }
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "graduationSegue" ,
+            let nextScene = segue.destination as? GraduationResults
+            {
+                var myDate: Date
+                myDate = graduationDate.date
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en_US")
+                dateFormatter.setLocalizedDateFormatFromTemplate("MMMMdyyyy")
+                var newDate = dateFormatter.string(from: myDate)
+                
+                nextScene.firstName = firstNameField.text!
+                nextScene.lastName = lastNameField.text!
+                nextScene.academy = academyLabel.text!
+                nextScene.graduationDate = newDate
+            }
+    }
+    override func performSegue(withIdentifier identifier: String, sender: Any?) {
+        
+    }
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if firstNameField.text != "",
+            lastNameField.text != "",
+            academyLabel.text != "" {
+            return true
+        }
+        else {
+            return false
+        }
+    }
 }
