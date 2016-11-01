@@ -1,32 +1,31 @@
 //
-//  AwardResults.swift
+//  PromotionResults.swift
 //  Hometown App
 //
-//  Created by David Thurman on 10/26/16.
+//  Created by David Thurman on 10/27/16.
 //  Copyright © 2016 David Thurman. All rights reserved.
 //
 
 import UIKit
 
-class AwardResults: UIViewController {
+class PromotionResults: UIViewController {
     var firstName = ""
     var lastName = ""
-    var award = ""
-    var reason = ""
-
+    var previousTitle = ""
+    var newTitle = ""
+    
     @IBOutlet var firstNameLabel: UILabel!
     @IBOutlet var lastNameLabel: UILabel!
-    @IBOutlet var awardLabel: UILabel!
-    @IBOutlet var reasonLabel: UILabel!
+    @IBOutlet var previousTitleLabel: UILabel!
+    @IBOutlet var newTitleLabel: UILabel!
     @IBOutlet var userPicture: UIImageView!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         firstNameLabel.text = firstName
         lastNameLabel.text = lastName
-        awardLabel.text = award
-        reasonLabel.text = reason
+        previousTitleLabel.text = previousTitle
+        newTitleLabel.text = newTitle
         userPicture.image = userImage
     }
     

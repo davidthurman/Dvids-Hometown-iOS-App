@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		32097CAB1DC125B800AEFB7D /* AwardResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32097CAA1DC125B800AEFB7D /* AwardResults.swift */; };
+		32097CAD1DC23B9200AEFB7D /* PromotionResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32097CAC1DC23B9200AEFB7D /* PromotionResults.swift */; };
+		32097CAF1DC24A7700AEFB7D /* PictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32097CAE1DC24A7700AEFB7D /* PictureViewController.swift */; };
+		32097CB11DC24B4200AEFB7D /* avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 32097CB01DC24B4200AEFB7D /* avatar.png */; };
 		3210FF671DBF70EF00849692 /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210FF661DBF70EF00849692 /* MainPageViewController.swift */; };
 		3210FF691DBF887B00849692 /* GraduationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210FF681DBF887B00849692 /* GraduationPage.swift */; };
 		3210FF6B1DBF88B300849692 /* PromotionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210FF6A1DBF88B300849692 /* PromotionPage.swift */; };
@@ -50,6 +53,9 @@
 
 /* Begin PBXFileReference section */
 		32097CAA1DC125B800AEFB7D /* AwardResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AwardResults.swift; sourceTree = "<group>"; };
+		32097CAC1DC23B9200AEFB7D /* PromotionResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromotionResults.swift; sourceTree = "<group>"; };
+		32097CAE1DC24A7700AEFB7D /* PictureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PictureViewController.swift; sourceTree = "<group>"; };
+		32097CB01DC24B4200AEFB7D /* avatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = avatar.png; path = ../../../avatar.png; sourceTree = "<group>"; };
 		3210FF661DBF70EF00849692 /* MainPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
 		3210FF681DBF887B00849692 /* GraduationPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraduationPage.swift; sourceTree = "<group>"; };
 		3210FF6A1DBF88B300849692 /* PromotionPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromotionPage.swift; sourceTree = "<group>"; };
@@ -109,6 +115,7 @@
 		32443B0B1DBA3118003AAC4E /* Hometown App */ = {
 			isa = PBXGroup;
 			children = (
+				32097CB01DC24B4200AEFB7D /* avatar.png */,
 				32443B311DBA504B003AAC4E /* Third Party */,
 				32443B2A1DBA4D34003AAC4E /* Enums */,
 				32443B231DBA4C3A003AAC4E /* Extensions */,
@@ -130,14 +137,16 @@
 			isa = PBXGroup;
 			children = (
 				32443B0E1DBA3118003AAC4E /* ViewController.swift */,
-				32443B211DBA47BC003AAC4E /* StartViewController.swift */,
 				32443B3B1DBA62E1003AAC4E /* UserNotificationRegistrationViewController.swift */,
+				32443B211DBA47BC003AAC4E /* StartViewController.swift */,
 				3210FF661DBF70EF00849692 /* MainPageViewController.swift */,
-				3210FF6A1DBF88B300849692 /* PromotionPage.swift */,
 				3210FF681DBF887B00849692 /* GraduationPage.swift */,
 				3210FF6E1DC0E6F200849692 /* GraduationResults.swift */,
 				3210FF6C1DBF88D700849692 /* AwardPage.swift */,
 				32097CAA1DC125B800AEFB7D /* AwardResults.swift */,
+				3210FF6A1DBF88B300849692 /* PromotionPage.swift */,
+				32097CAC1DC23B9200AEFB7D /* PromotionResults.swift */,
+				32097CAE1DC24A7700AEFB7D /* PictureViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -209,6 +218,7 @@
 				TargetAttributes = {
 					32443B081DBA3118003AAC4E = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = T735J2M8M7;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -236,6 +246,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32097CB11DC24B4200AEFB7D /* avatar.png in Resources */,
 				32443B171DBA3119003AAC4E /* LaunchScreen.storyboard in Resources */,
 				32443B141DBA3119003AAC4E /* Assets.xcassets in Resources */,
 				32443B121DBA3119003AAC4E /* Main.storyboard in Resources */,
@@ -253,6 +264,7 @@
 				32443B271DBA4C83003AAC4E /* Utility.swift in Sources */,
 				32443B0F1DBA3118003AAC4E /* ViewController.swift in Sources */,
 				3210FF6B1DBF88B300849692 /* PromotionPage.swift in Sources */,
+				32097CAF1DC24A7700AEFB7D /* PictureViewController.swift in Sources */,
 				32443B0D1DBA3118003AAC4E /* AppDelegate.swift in Sources */,
 				3210FF691DBF887B00849692 /* GraduationPage.swift in Sources */,
 				32443B331DBA5062003AAC4E /* SwiftyJSON.swift in Sources */,
@@ -267,6 +279,7 @@
 				32443B2E1DBA4DC1003AAC4E /* DvidsOauth.swift in Sources */,
 				32443B221DBA47BC003AAC4E /* StartViewController.swift in Sources */,
 				32443B301DBA5001003AAC4E /* UserDefaultKeys.swift in Sources */,
+				32097CAD1DC23B9200AEFB7D /* PromotionResults.swift in Sources */,
 				32443B3A1DBA6250003AAC4E /* NSDateISO8601.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,14 +401,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = T735J2M8M7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "Hometown App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.DavidThurman.Hometown-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -404,14 +422,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = T735J2M8M7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "Hometown App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.DavidThurman.Hometown-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

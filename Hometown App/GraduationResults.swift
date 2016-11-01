@@ -18,6 +18,7 @@ class GraduationResults: UIViewController {
     @IBOutlet var lastNameLabel: UILabel!
     @IBOutlet var academyLabel: UILabel!
     @IBOutlet var graduationLabel: UILabel!
+    @IBOutlet var imageOutlet: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +31,7 @@ class GraduationResults: UIViewController {
         lastNameLabel.text = lastName
         academyLabel.text = academy
         graduationLabel.text = graduationDate
+        imageOutlet.image = userImage
     }
 
     

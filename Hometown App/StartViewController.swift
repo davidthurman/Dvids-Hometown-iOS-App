@@ -22,18 +22,14 @@ class StartViewController: UIViewController {
     }
     
     @IBAction func authenticateAction(_ sender: AnyObject) {
-        print("1")
         print(DvidsOauth.authorizeUrl)
-        print("2")
         NotificationNames.appOpenedWithUrl.add(observer: self, selector: #selector(onAppOpenedWithUrl(_:)))
         presentSafariViewController(url: DvidsOauth.authorizeUrl)
     }
     
     func onAppOpenedWithUrl(_ notification: Notification) {
-        print("3")
         NotificationNames.appOpenedWithUrl.remove(observer: self)
         guard let url = notification.userInfo?["URL"] as? URL else { return }
-        print("4")
         let urlComponents = NSURLComponents(string: url.absoluteString)
         if let code = urlComponents?.queryItems?.filter({$0.name == "code"}).first?.value {
             DvidsOauth.getAccessToken(withCode: code) {

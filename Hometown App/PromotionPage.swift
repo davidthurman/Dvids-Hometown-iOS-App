@@ -31,4 +31,26 @@ class PromotionPage: UIViewController {
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "Main Page") as! MainPageViewController
         self.present(nextViewController, animated:true, completion:nil)
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "promotionSegue" ,
+            let nextScene = segue.destination as? PromotionResults
+        {
+            nextScene.firstName = firstNameField.text!
+            nextScene.lastName = lastNameField.text!
+            nextScene.previousTitle = previousTitleField.text!
+            nextScene.newTitle = newTitleField.text!
+        }
+    }
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if firstNameField.text != "",
+            lastNameField.text != "",
+            previousTitleField.text != "",
+            newTitleField.text != "" {
+            return true
+        }
+        else {
+            return false
+        }
+    }
 }
