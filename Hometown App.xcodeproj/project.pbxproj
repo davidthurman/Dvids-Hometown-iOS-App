@@ -7,15 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		32097CAB1DC125B800AEFB7D /* AwardResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32097CAA1DC125B800AEFB7D /* AwardResults.swift */; };
-		32097CAD1DC23B9200AEFB7D /* PromotionResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32097CAC1DC23B9200AEFB7D /* PromotionResults.swift */; };
+		3205495D1DDB309800BD41C6 /* ImageWithTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3205495C1DDB309800BD41C6 /* ImageWithTag.swift */; };
 		32097CAF1DC24A7700AEFB7D /* PictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32097CAE1DC24A7700AEFB7D /* PictureViewController.swift */; };
 		32097CB11DC24B4200AEFB7D /* avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 32097CB01DC24B4200AEFB7D /* avatar.png */; };
 		3210FF671DBF70EF00849692 /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210FF661DBF70EF00849692 /* MainPageViewController.swift */; };
-		3210FF691DBF887B00849692 /* GraduationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210FF681DBF887B00849692 /* GraduationPage.swift */; };
-		3210FF6B1DBF88B300849692 /* PromotionPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210FF6A1DBF88B300849692 /* PromotionPage.swift */; };
-		3210FF6D1DBF88D700849692 /* AwardPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210FF6C1DBF88D700849692 /* AwardPage.swift */; };
-		3210FF6F1DC0E6F200849692 /* GraduationResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210FF6E1DC0E6F200849692 /* GraduationResults.swift */; };
+		3217049B1DD0FC44006C17E1 /* ReviewPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3217049A1DD0FC44006C17E1 /* ReviewPage.swift */; };
 		32443B0D1DBA3118003AAC4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32443B0C1DBA3118003AAC4E /* AppDelegate.swift */; };
 		32443B0F1DBA3118003AAC4E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32443B0E1DBA3118003AAC4E /* ViewController.swift */; };
 		32443B121DBA3119003AAC4E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32443B101DBA3119003AAC4E /* Main.storyboard */; };
@@ -35,6 +31,9 @@
 		32443B3C1DBA62E1003AAC4E /* UserNotificationRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32443B3B1DBA62E1003AAC4E /* UserNotificationRegistrationViewController.swift */; };
 		32443B411DBA69C9003AAC4E /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32443B371DBA6215003AAC4E /* XCGLogger.framework */; };
 		32443B421DBA69C9003AAC4E /* XCGLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 32443B371DBA6215003AAC4E /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		32490CB61DCB89C3001F754D /* EventInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32490CB51DCB89C3001F754D /* EventInfoForm.swift */; };
+		327859E81DD494F100F81301 /* EventMediaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 327859E71DD494F100F81301 /* EventMediaController.swift */; };
+		32915F141DCA180C0001782C /* Form.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32915F131DCA180C0001782C /* Form.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,15 +51,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		32097CAA1DC125B800AEFB7D /* AwardResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AwardResults.swift; sourceTree = "<group>"; };
-		32097CAC1DC23B9200AEFB7D /* PromotionResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromotionResults.swift; sourceTree = "<group>"; };
+		3205495C1DDB309800BD41C6 /* ImageWithTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageWithTag.swift; sourceTree = "<group>"; };
 		32097CAE1DC24A7700AEFB7D /* PictureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PictureViewController.swift; sourceTree = "<group>"; };
 		32097CB01DC24B4200AEFB7D /* avatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = avatar.png; path = ../../../avatar.png; sourceTree = "<group>"; };
 		3210FF661DBF70EF00849692 /* MainPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
-		3210FF681DBF887B00849692 /* GraduationPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraduationPage.swift; sourceTree = "<group>"; };
-		3210FF6A1DBF88B300849692 /* PromotionPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromotionPage.swift; sourceTree = "<group>"; };
-		3210FF6C1DBF88D700849692 /* AwardPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AwardPage.swift; sourceTree = "<group>"; };
-		3210FF6E1DC0E6F200849692 /* GraduationResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraduationResults.swift; sourceTree = "<group>"; };
+		3217049A1DD0FC44006C17E1 /* ReviewPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewPage.swift; sourceTree = "<group>"; };
 		32443B091DBA3118003AAC4E /* Hometown App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hometown App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		32443B0C1DBA3118003AAC4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		32443B0E1DBA3118003AAC4E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -80,6 +75,9 @@
 		32443B371DBA6215003AAC4E /* XCGLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCGLogger.framework; path = Carthage/Build/iOS/XCGLogger.framework; sourceTree = "<group>"; };
 		32443B391DBA6250003AAC4E /* NSDateISO8601.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateISO8601.swift; sourceTree = "<group>"; };
 		32443B3B1DBA62E1003AAC4E /* UserNotificationRegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserNotificationRegistrationViewController.swift; sourceTree = "<group>"; };
+		32490CB51DCB89C3001F754D /* EventInfoForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoForm.swift; sourceTree = "<group>"; };
+		327859E71DD494F100F81301 /* EventMediaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventMediaController.swift; sourceTree = "<group>"; };
+		32915F131DCA180C0001782C /* Form.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Form.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,17 +116,17 @@
 				32097CB01DC24B4200AEFB7D /* avatar.png */,
 				32443B311DBA504B003AAC4E /* Third Party */,
 				32443B2A1DBA4D34003AAC4E /* Enums */,
-				32443B231DBA4C3A003AAC4E /* Extensions */,
 				32443B1E1DBA4751003AAC4E /* View Controllers */,
 				32443B0C1DBA3118003AAC4E /* AppDelegate.swift */,
+				32443B261DBA4C83003AAC4E /* Utility.swift */,
 				32443B101DBA3119003AAC4E /* Main.storyboard */,
 				32443B131DBA3119003AAC4E /* Assets.xcassets */,
 				32443B151DBA3119003AAC4E /* LaunchScreen.storyboard */,
 				32443B181DBA3119003AAC4E /* Info.plist */,
-				32443B261DBA4C83003AAC4E /* Utility.swift */,
 				32443B281DBA4CB1003AAC4E /* AppConfig.swift */,
 				32443B2D1DBA4DC1003AAC4E /* DvidsOauth.swift */,
 				32443B341DBA5256003AAC4E /* GlobalConstants.swift */,
+				3205495C1DDB309800BD41C6 /* ImageWithTag.swift */,
 			);
 			path = "Hometown App";
 			sourceTree = "<group>";
@@ -136,17 +134,16 @@
 		32443B1E1DBA4751003AAC4E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				32443B231DBA4C3A003AAC4E /* Extensions */,
 				32443B0E1DBA3118003AAC4E /* ViewController.swift */,
 				32443B3B1DBA62E1003AAC4E /* UserNotificationRegistrationViewController.swift */,
 				32443B211DBA47BC003AAC4E /* StartViewController.swift */,
 				3210FF661DBF70EF00849692 /* MainPageViewController.swift */,
-				3210FF681DBF887B00849692 /* GraduationPage.swift */,
-				3210FF6E1DC0E6F200849692 /* GraduationResults.swift */,
-				3210FF6C1DBF88D700849692 /* AwardPage.swift */,
-				32097CAA1DC125B800AEFB7D /* AwardResults.swift */,
-				3210FF6A1DBF88B300849692 /* PromotionPage.swift */,
-				32097CAC1DC23B9200AEFB7D /* PromotionResults.swift */,
 				32097CAE1DC24A7700AEFB7D /* PictureViewController.swift */,
+				32915F131DCA180C0001782C /* Form.swift */,
+				32490CB51DCB89C3001F754D /* EventInfoForm.swift */,
+				3217049A1DD0FC44006C17E1 /* ReviewPage.swift */,
+				327859E71DD494F100F81301 /* EventMediaController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -260,27 +257,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3210FF6F1DC0E6F200849692 /* GraduationResults.swift in Sources */,
+				327859E81DD494F100F81301 /* EventMediaController.swift in Sources */,
 				32443B271DBA4C83003AAC4E /* Utility.swift in Sources */,
 				32443B0F1DBA3118003AAC4E /* ViewController.swift in Sources */,
-				3210FF6B1DBF88B300849692 /* PromotionPage.swift in Sources */,
 				32097CAF1DC24A7700AEFB7D /* PictureViewController.swift in Sources */,
 				32443B0D1DBA3118003AAC4E /* AppDelegate.swift in Sources */,
-				3210FF691DBF887B00849692 /* GraduationPage.swift in Sources */,
 				32443B331DBA5062003AAC4E /* SwiftyJSON.swift in Sources */,
 				32443B291DBA4CB1003AAC4E /* AppConfig.swift in Sources */,
-				3210FF6D1DBF88D700849692 /* AwardPage.swift in Sources */,
+				32490CB61DCB89C3001F754D /* EventInfoForm.swift in Sources */,
 				32443B351DBA5256003AAC4E /* GlobalConstants.swift in Sources */,
 				32443B2C1DBA4D48003AAC4E /* NotificationNames.swift in Sources */,
-				32097CAB1DC125B800AEFB7D /* AwardResults.swift in Sources */,
 				32443B3C1DBA62E1003AAC4E /* UserNotificationRegistrationViewController.swift in Sources */,
+				3205495D1DDB309800BD41C6 /* ImageWithTag.swift in Sources */,
 				3210FF671DBF70EF00849692 /* MainPageViewController.swift in Sources */,
 				32443B251DBA4C5A003AAC4E /* UIViewController.extension.swift in Sources */,
 				32443B2E1DBA4DC1003AAC4E /* DvidsOauth.swift in Sources */,
+				3217049B1DD0FC44006C17E1 /* ReviewPage.swift in Sources */,
 				32443B221DBA47BC003AAC4E /* StartViewController.swift in Sources */,
 				32443B301DBA5001003AAC4E /* UserDefaultKeys.swift in Sources */,
-				32097CAD1DC23B9200AEFB7D /* PromotionResults.swift in Sources */,
 				32443B3A1DBA6250003AAC4E /* NSDateISO8601.swift in Sources */,
+				32915F141DCA180C0001782C /* Form.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
