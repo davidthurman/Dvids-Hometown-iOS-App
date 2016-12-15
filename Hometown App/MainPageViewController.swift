@@ -10,27 +10,53 @@ import UIKit
 
 class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelegate {
     
+    @IBOutlet var nextButton: UIButton!
+    
     @IBOutlet var eventLabel: UILabel!
     @IBOutlet var eventScroll: UIPickerView!
 
+    @IBOutlet var subeventLabel: UILabel!
     var events: [String : [String]] = [:]
     
     @IBOutlet var subeventScroll: UIPickerView!
     
     var pickerData = [""]
-    var selectedEvent = "Army Cadet Command"
-    var selectedSubevent = "taco"
+    var selectedEvent = ""
+    var selectedSubevent = ""
+    let loadingLabel = UILabel(frame: CGRect(x: 0, y: 200, width: 200, height: 30))
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        eventScroll.isHidden = true
+        eventLabel.isHidden = true
+        subeventScroll.isHidden = true
+        subeventLabel.isHidden = true
+        nextButton.isEnabled = false
+        
+        
+        loadingLabel.center.x = self.view.center.x
+        loadingLabel.textAlignment = .center
+        loadingLabel.text = "Loading..."
+        loadingLabel.textColor = UIColor(red:0.50, green:0.17, blue:0.16, alpha:1.0)
+        loadingLabel.font = UIFont.boldSystemFont(ofSize: 22.0)
+        self.view.addSubview(loadingLabel)
+        
+        fetchJson()
+        
+    }
+    
+    func fetchJson() {
         let config = URLSessionConfiguration.default // Session Configuration
         let session = URLSession(configuration: config) // Load configuration into Session
         let url = URL(string: "http://127.0.0.1:8000/events")!
         
+        //fetch json from url
         let task = session.dataTask(with: url, completionHandler: {
             (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
+                self.fetchJson()
             } else {
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String: Any]
@@ -40,13 +66,25 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
                         for x in 0...(json2.count - 1) {
                             var testArray: [String] = []
                             for y in 0...((json2["\(x)"]["sub_events"].count - 1)) {
+                                if x == 0 && y == 0 {
+                                }
                                 testArray.append(json2["\(x)"]["sub_events"]["\(y)"]["name"].string!)
                             }
                             self.events[json2["\(x)"]["name"].string!] = testArray
+                            if x == 0 {
+                                
+                                self.selectedEvent = json2["\(x)"]["name"].string!
+                            }
                         }
-                     
-                        self.pickerData = Array(self.events.keys)
                         
+                        let test = self.events.sorted(by: { $0.0 < $1.0 })
+                        var eventArray = [String]()
+                        for x in test {
+                            self.events[x.key] = x.value
+                            eventArray.append(String(x.key))
+                        }
+                        
+                        self.pickerData = eventArray
                         
                         self.eventScroll.tag = 0
                         self.eventScroll.delegate = self
@@ -59,6 +97,13 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
                         DispatchQueue.main.async {
                             self.eventScroll.reloadAllComponents()
                             self.subeventScroll.reloadAllComponents()
+                            self.eventScroll.reloadAllComponents()
+                            self.loadingLabel.isHidden = true
+                            self.eventScroll.isHidden = false
+                            self.eventLabel.isHidden = false
+                            self.subeventScroll.isHidden = false
+                            self.subeventLabel.isHidden = false
+                            self.nextButton.isEnabled = true
                         }
                     }
                 } catch {
@@ -67,8 +112,8 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
             }
         })
         task.resume()
-        
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -76,17 +121,20 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
     
 
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        print("1")
         return 1
     }
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView.tag == 0{
-            print("2")
             return pickerData.count
         }
         else {
-            print("3")
-            return events[selectedEvent]!.count
+            if let x = events[selectedEvent]?.count {
+                
+                return x
+            }
+            else {
+                return 0
+            }
         }
     }
 
@@ -106,20 +154,17 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
             subeventScroll.reloadAllComponents()
         }
         else {
-            print("7")
             selectedSubevent = events[selectedEvent]![row]
         }
     }
     
     func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         if pickerView.tag == 0 {
-            print("8")
             let titleData = pickerData[row]
             var myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
             return myTitle
         }
         else {
-            print("9")
             let titleData = events[selectedEvent]![row]
             var myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
             return myTitle

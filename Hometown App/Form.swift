@@ -15,13 +15,14 @@ class Form: UIViewController {
     @IBOutlet var nextButton: UIButton!
     var testEvents: [String] = []
     var profileFields: [[String : String]] = []
+    let loadingLabel = UILabel(frame: CGRect(x: 0, y: 200, width: 200, height: 30))
         
     override func viewDidLoad() {
         super.viewDidLoad()
         
         nextButton.isEnabled = false
         
-        let loadingLabel = UILabel(frame: CGRect(x: 0, y: 200, width: 200, height: 30))
+        
         loadingLabel.center.x = self.view.center.x
         loadingLabel.textAlignment = .center
         loadingLabel.text = "Loading..."
@@ -29,6 +30,11 @@ class Form: UIViewController {
         loadingLabel.font = UIFont.boldSystemFont(ofSize: 22.0)
         self.scrollView.addSubview(loadingLabel)
 
+        fetchJson()
+        
+    }
+    
+    func fetchJson() {
         let config = URLSessionConfiguration.default // Session Configuration
         let session = URLSession(configuration: config) // Load configuration into Session
         let url = URL(string: "http://127.0.0.1:8000/profile/" + String(dvidsId))!
@@ -37,14 +43,12 @@ class Form: UIViewController {
             (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
+                self.fetchJson()
             } else {
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String: Any]
                     {
                         let json2 = JSON(data: data!)
-                        print("TEST")
-                        print(json.count)
-                        //print(json)
                         var count: Int = 0
                         var fieldsArray: [String]
                         while json2["fields"]["\(count)"] != nil{
@@ -59,11 +63,10 @@ class Form: UIViewController {
                             self.profileFields.append(tempDict)
                             count = count + 1
                         }
-                        print(self.profileFields)
                         
                         DispatchQueue.main.async {
                             self.populate()
-                            loadingLabel.isHidden = true
+                            self.loadingLabel.isHidden = true
                             self.nextButton.isEnabled = true
                         }
                     }
@@ -73,7 +76,6 @@ class Form: UIViewController {
             }
         })
         task.resume()
-        
     }
     
     override func didReceiveMemoryWarning() {

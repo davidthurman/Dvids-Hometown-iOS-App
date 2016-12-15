@@ -58,7 +58,6 @@ class EventInfoForm: UIViewController {
         var inputDictionary : [Int: String] = [:]
         var count = 1
         for x in testEventQuestions{
-            //print(x)
             let label = UILabel(frame: CGRect(x: 0, y: heightLength, width: 200, height: 21))
             label.center.x = self.view.center.x
             label.textAlignment = .center

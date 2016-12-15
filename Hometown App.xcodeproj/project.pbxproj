@@ -12,6 +12,8 @@
 		32097CB11DC24B4200AEFB7D /* avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 32097CB01DC24B4200AEFB7D /* avatar.png */; };
 		3210FF671DBF70EF00849692 /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210FF661DBF70EF00849692 /* MainPageViewController.swift */; };
 		3217049B1DD0FC44006C17E1 /* ReviewPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3217049A1DD0FC44006C17E1 /* ReviewPage.swift */; };
+		3236566F1DF9E5DB00FBA48C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3236566E1DF9E5DB00FBA48C /* Alamofire.framework */; };
+		323656701DF9E5DB00FBA48C /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3236566E1DF9E5DB00FBA48C /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		32443B0D1DBA3118003AAC4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32443B0C1DBA3118003AAC4E /* AppDelegate.swift */; };
 		32443B0F1DBA3118003AAC4E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32443B0E1DBA3118003AAC4E /* ViewController.swift */; };
 		32443B121DBA3119003AAC4E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 32443B101DBA3119003AAC4E /* Main.storyboard */; };
@@ -44,6 +46,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				32443B421DBA69C9003AAC4E /* XCGLogger.framework in Embed Frameworks */,
+				323656701DF9E5DB00FBA48C /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -56,6 +59,8 @@
 		32097CB01DC24B4200AEFB7D /* avatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = avatar.png; path = ../../../avatar.png; sourceTree = "<group>"; };
 		3210FF661DBF70EF00849692 /* MainPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainPageViewController.swift; sourceTree = "<group>"; };
 		3217049A1DD0FC44006C17E1 /* ReviewPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewPage.swift; sourceTree = "<group>"; };
+		3236566B1DF9E20800FBA48C /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = Carthage/Build/iOS/AFNetworking.framework; sourceTree = "<group>"; };
+		3236566E1DF9E5DB00FBA48C /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		32443B091DBA3118003AAC4E /* Hometown App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hometown App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		32443B0C1DBA3118003AAC4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		32443B0E1DBA3118003AAC4E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -86,6 +91,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				32443B381DBA6215003AAC4E /* XCGLogger.framework in Frameworks */,
+				3236566F1DF9E5DB00FBA48C /* Alamofire.framework in Frameworks */,
 				32443B411DBA69C9003AAC4E /* XCGLogger.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,6 +102,7 @@
 		32443B001DBA3118003AAC4E = {
 			isa = PBXGroup;
 			children = (
+				3236566B1DF9E20800FBA48C /* AFNetworking.framework */,
 				32443B0B1DBA3118003AAC4E /* Hometown App */,
 				32443B0A1DBA3118003AAC4E /* Products */,
 				32443B361DBA6215003AAC4E /* Frameworks */,
@@ -177,6 +184,7 @@
 		32443B361DBA6215003AAC4E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3236566E1DF9E5DB00FBA48C /* Alamofire.framework */,
 				32443B371DBA6215003AAC4E /* XCGLogger.framework */,
 			);
 			name = Frameworks;

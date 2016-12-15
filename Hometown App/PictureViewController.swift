@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class PictureViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
@@ -16,10 +17,18 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         imageFromSource.delegate = self
         if userImage != nil {
             eventPicture.image = userImage
         }
+        
+    }
+    func popUp() {
+        let alert = UIAlertController(title: "Alert", message: "Message", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     
@@ -71,82 +80,48 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
         print("LLLL")
         print(fieldDict)
         
+        let dic = ["2": "B", "1": "A", "3": "C"]
         
-        var request = URLRequest(url: URL(string: "http://localhost:8000/profile/test")!)
-        request.httpMethod = "POST"
-        request.httpBody = postString.data(using: .utf8)
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {                                                 // check for fundamental networking error
-                print("error=\(error)")
-                return
-            }
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: dic, options: .prettyPrinted)
+            // here "jsonData" is the dictionary encoded in JSON data
             
-            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
-                print("statusCode should be 200, but is \(httpStatus.statusCode)")
-                print("response = \(response)")
-            }
+            let decoded = try JSONSerialization.jsonObject(with: jsonData, options: [])
+            // here "decoded" is of type `Any`, decoded from JSON data
             
-            let responseString = String(data: data, encoding: .utf8)
-            print("responseString = \(responseString)")
+            // you can now cast it with the right type
+            if let dictFromJSON = decoded as? [String:String] {
+                let postUrl = "http://localhost:8000/profile/" + String(dvidsId)
+                
+                var fields: [String:String] = [:]
+                for x in userInfo {
+                    fields[x.key] = x.value
+                }
+                
+                let parameters: [String: Any] = [
+                    "fields":
+                            fields
+                    
+                ]
+                Alamofire.request(postUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                    .responseJSON { response in
+                        if response.response == nil {
+                            self.popUp()
+                            
+                        }
+                        
+                        print(response.response)
+                        print("TEST999")
+                }
+            }
+        } catch {
+            print("TEST000")
+            print(error.localizedDescription)
         }
-        task.resume()
-        
-        
+
         myImageUploadRequest()
-        
-        
-        
-        
-        
-        
-//        let json = (fieldDict)
-//        
-//        do {
-//            let jsonData = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-//            print("QQQ")
-//            print(jsonData)
-//            // create post request
-//            let url = NSURL(string: "http://localhost:8000/profile/test")!
-//            let request = NSMutableURLRequest(url: url as URL)
-//            request.httpMethod = "POST"
-//            
-//            // insert json data to the request
-//            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//            request.httpBody = jsonData
-//            print("III")
-//            print(request)
-//            
-//            print(<#T##items: Any...##Any#>)
-//            let task = URLSession.shared.dataTask(with: request as URLRequest){ data, response, error in
-//                if error != nil{
-//                    print("Error -> \(error)")
-//                    return
-//                }
-//                
-//                do {
-//                    let result = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String:AnyObject]
-//                    
-//                    print("Result -> \(result)")
-//                    
-//                } catch {
-//                    print("TESTqwe")
-//
-//                    print("Error -> \(error)")
-//                }
-//            }
-//            
-//            task.resume()            
-//            
-//            
-//        } catch {
-//            print(error)
-//        }
- 
-        
-        print("TEST123")
-        print(userInfo)
-        
-        
+
+
         
         if segue.identifier == "pictureSegue" ,
             let nextScene = segue.destination as? MainPageViewController
@@ -155,8 +130,14 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
         }
     }
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if (sender as! UIButton).currentTitle! == "Next" {
+        if (sender as! UIButton).currentTitle! == "Update" {
+            //popUp()
+            let alert = UIAlertController(title: "Alert", message: "Message", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return true
             if UIImagePNGRepresentation(eventPicture.image!) != UIImagePNGRepresentation(#imageLiteral(resourceName: "avatar.png")) {
+                
                 return true
             }
             else {
@@ -171,70 +152,26 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
     }
     
     
+
     
-    func myImageUploadRequest()
-    {
-        
-        let myUrl = NSURL(string: "http://localhost:8000/profile/upload");
-        //let myUrl = NSURL(string: "http://www.boredwear.com/utils/postImage.php");
-        
-        let request = NSMutableURLRequest(url:myUrl! as URL);
-        request.httpMethod = "POST";
-        
-        let param = [
-            "firstName"  : "Sergey",
-            "lastName"    : "Kargopolov",
-            "userId"    : "9"
-        ]
-        
-        let boundary = generateBoundaryString()
-        
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
-        
+    func myImageUploadRequest() {
         let imageData = UIImageJPEGRepresentation(eventPicture.image!, 1)
         
-        if(imageData==nil)  { return; }
-        
-        request.httpBody = createBodyWithParameters(parameters: param, filePathKey: "file", imageDataKey: imageData! as NSData, boundary: boundary) as Data
-        
-        
-        //myActivityIndicator.startAnimating();
-        
-        let task = URLSession.shared.dataTask(with: request as URLRequest) {
-            data, response, error in
-            
-            if error != nil {
-                print("error=\(error)")
-                return
-            }
-            
-            // You can print out response object
-            print("******* response = \(response)")
-            
-            // Print out reponse body
-            let responseString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-            print("****** response data = \(responseString!)")
-            
-            do {
-                let json = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary
-                
-                print(json)
-                
-                //dispatch_async(dispatch_get_main_queue(),{
-                   // self.myActivityIndicator.stopAnimating()
-                   // self.myImageView.image = nil;
-               // });
-                
-            }catch
-            {
-                print(error)
-            }
-            
+        Alamofire.upload(imageData!, to: "http://localhost:8000/profile/" + String(dvidsId) + "/media").responseJSON { response in
+            debugPrint(response)
         }
-        
-        task.resume()
     }
+    
+    
+
+    
+    func generateBoundaryString() -> String {
+        
+        return "Boundary-\(NSUUID().uuidString)"
+    }
+    
+    
+    
     
     func createBodyWithParameters(parameters: [String: String]?, filePathKey: String?, imageDataKey: NSData, boundary: String) -> NSData {
         let body = NSMutableData();
@@ -264,10 +201,7 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
     }
     
     
-    
-    func generateBoundaryString() -> String {
-        return "Boundary-\(NSUUID().uuidString)"
-    }
+
 }
 extension NSMutableData {
     

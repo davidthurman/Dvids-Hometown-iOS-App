@@ -287,6 +287,8 @@
                     <connections>
                         <outlet property="eventLabel" destination="ulJ-nr-WxX" id="8bF-Hh-p97"/>
                         <outlet property="eventScroll" destination="2Lu-ac-56j" id="Cq1-Nv-qUU"/>
+                        <outlet property="nextButton" destination="u1r-h8-Oz0" id="byx-hz-kEe"/>
+                        <outlet property="subeventLabel" destination="UQk-Ch-ryR" id="mYT-Nv-K7f"/>
                         <outlet property="subeventScroll" destination="d8K-3z-C05" id="d4g-TJ-ZbN"/>
                     </connections>
                 </viewController>
@@ -593,8 +595,8 @@
         <image name="avatar.png" width="1280" height="1210"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="ivt-po-Nxd"/>
         <segue reference="NPp-bM-p9w"/>
-        <segue reference="E4a-Ro-dUa"/>
         <segue reference="BVA-2z-xY3"/>
         <segue reference="7Lo-2g-iup"/>
     </inferredMetricsTieBreakers>
