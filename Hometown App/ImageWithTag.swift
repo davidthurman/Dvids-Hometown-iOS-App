@@ -12,10 +12,8 @@ import UIKit
 class ImageWithTag
 {
     
-    //the image variable
     var img : UIImage? = nil
     
-    // the tag variable
     var imgID : Int? = nil
     
     init (img: UIImage, imgId: Int) {

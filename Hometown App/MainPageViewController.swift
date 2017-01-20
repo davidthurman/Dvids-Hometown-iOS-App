@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelegate {
     
@@ -21,9 +22,12 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
     @IBOutlet var subeventScroll: UIPickerView!
     
     var pickerData = [""]
-    var selectedEvent = ""
-    var selectedSubevent = ""
+    var tempSelectedEvent = ""
+    var tempSelectedSubevent = ""
     let loadingLabel = UILabel(frame: CGRect(x: 0, y: 200, width: 200, height: 30))
+    var timeoutTracker = 0
+    var tempSlugDict: [String: [String : String]] = [:]
+    var tempNameToSlugDict: [String: String] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,73 +51,82 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
     }
     
     func fetchJson() {
-        let config = URLSessionConfiguration.default // Session Configuration
-        let session = URLSession(configuration: config) // Load configuration into Session
-        let url = URL(string: "http://127.0.0.1:8000/events")!
         
-        //fetch json from url
-        let task = session.dataTask(with: url, completionHandler: {
-            (data, response, error) in
-            if error != nil {
-                print(error!.localizedDescription)
-                self.fetchJson()
-            } else {
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String: Any]
-                    {
-                        let json2 = JSON(data: data!)
-                        var testDict : [String : [String]] = [:]
-                        for x in 0...(json2.count - 1) {
-                            var testArray: [String] = []
-                            for y in 0...((json2["\(x)"]["sub_events"].count - 1)) {
-                                if x == 0 && y == 0 {
-                                }
-                                testArray.append(json2["\(x)"]["sub_events"]["\(y)"]["name"].string!)
-                            }
-                            self.events[json2["\(x)"]["name"].string!] = testArray
-                            if x == 0 {
-                                
-                                self.selectedEvent = json2["\(x)"]["name"].string!
-                            }
-                        }
-                        
-                        let test = self.events.sorted(by: { $0.0 < $1.0 })
-                        var eventArray = [String]()
-                        for x in test {
-                            self.events[x.key] = x.value
-                            eventArray.append(String(x.key))
-                        }
-                        
-                        self.pickerData = eventArray
-                        
-                        self.eventScroll.tag = 0
-                        self.eventScroll.delegate = self
-                        self.eventScroll.dataSource = self
-                        
-                        self.subeventScroll.tag = 1
-                        self.subeventScroll.delegate = self
-                        self.subeventScroll.dataSource = self
-                        
-                        DispatchQueue.main.async {
-                            self.eventScroll.reloadAllComponents()
-                            self.subeventScroll.reloadAllComponents()
-                            self.eventScroll.reloadAllComponents()
-                            self.loadingLabel.isHidden = true
-                            self.eventScroll.isHidden = false
-                            self.eventLabel.isHidden = false
-                            self.subeventScroll.isHidden = false
-                            self.subeventLabel.isHidden = false
-                            self.nextButton.isEnabled = true
-                        }
-                    }
-                } catch {
-                    print("error in JSONSerialization")
+        Alamofire.request("http://127.0.0.1:8000/events").responseJSON { response in
+            debugPrint(response)
+            
+            if response.response == nil {
+                self.timeoutTracker = self.timeoutTracker + 1
+                if self.timeoutTracker == 5 {
+                    self.timeoutTracker = 0
+                    self.popUp()
+                }
+                else {
+                    sleep(2)
+                    self.fetchJson()
                 }
             }
-        })
-        task.resume()
+            
+            if let json = response.result.value {
+                let jsonTest = JSON(json)
+                print("GGG")
+                print(jsonTest)
+                for x in 0...(jsonTest.count - 1) {
+                    var tempDict: [String : String] = [:]
+                    var tempArray: [String] = []
+                    for y in 0...((jsonTest["\(x)"]["sub_events"].count - 1)) {
+                        tempDict[jsonTest["\(x)"]["sub_events"]["\(y)"]["name"].string!] = jsonTest["\(x)"]["sub_events"]["\(y)"]["slug"].string!
+                        if x == 0 && y == 0 {
+                            self.tempSelectedSubevent = jsonTest["\(x)"]["sub_events"]["0"]["name"].string!
+                        }
+                        tempArray.append(jsonTest["\(x)"]["sub_events"]["\(y)"]["name"].string!)
+                    }
+                    self.tempNameToSlugDict[jsonTest["\(x)"]["name"].string!] = jsonTest["\(x)"]["slug"].string!
+                    self.tempSlugDict[jsonTest["\(x)"]["slug"].string!] = tempDict
+                    self.events[jsonTest["\(x)"]["name"].string!] = tempArray
+                    if x == 0 {
+                        self.tempSelectedEvent = jsonTest["\(x)"]["name"].string!
+                    }
+                    
+                    let test = self.events.sorted(by: { $0.0 < $1.0 })
+                    var eventArray = [String]()
+                    for x in test {
+                        self.events[x.key] = x.value
+                        eventArray.append(String(x.key))
+                    }
+                    
+                    self.pickerData = eventArray
+                    
+                    self.eventScroll.tag = 0
+                    self.eventScroll.delegate = self
+                    self.eventScroll.dataSource = self
+                    
+                    self.subeventScroll.tag = 1
+                    self.subeventScroll.delegate = self
+                    self.subeventScroll.dataSource = self
+                    
+                    DispatchQueue.main.async {
+                        self.eventScroll.reloadAllComponents()
+                        self.subeventScroll.reloadAllComponents()
+                        self.eventScroll.reloadAllComponents()
+                        self.loadingLabel.isHidden = true
+                        self.eventScroll.isHidden = false
+                        self.eventLabel.isHidden = false
+                        self.subeventScroll.isHidden = false
+                        self.subeventLabel.isHidden = false
+                        self.nextButton.isEnabled = true
+                    }
+                }
+            }
+        }
     }
     
+    func popUp() {
+        let alert = UIAlertController(title: "No Connection", message: "Your request was unable to submit. Would you like to retry your submission or cancel?", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Retry", style: UIAlertActionStyle.default, handler: { action in self.fetchJson()}))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action in self.performSegue(withIdentifier: "cancelSegue", sender: self)}))
+        self.present(alert, animated: true, completion: nil)
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -128,7 +141,7 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
             return pickerData.count
         }
         else {
-            if let x = events[selectedEvent]?.count {
+            if let x = events[tempSelectedEvent]?.count {
                 
                 return x
             }
@@ -143,37 +156,43 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
             return pickerData[row]
         }
         else {
-            return events[selectedEvent]![row]
+            return events[tempSelectedEvent]![row]
         }
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView.tag == 0 {
-            selectedEvent = pickerData[row]
-            selectedSubevent = events[selectedEvent]![0]
+            tempSelectedEvent = pickerData[row]
+            tempSelectedSubevent = events[tempSelectedEvent]![0]
             subeventScroll.reloadAllComponents()
         }
         else {
-            selectedSubevent = events[selectedEvent]![row]
+            tempSelectedSubevent = events[tempSelectedEvent]![row]
         }
     }
     
     func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         if pickerView.tag == 0 {
             let titleData = pickerData[row]
-            var myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
+            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
             return myTitle
         }
         else {
-            let titleData = events[selectedEvent]![row]
-            var myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
+            let titleData = events[tempSelectedEvent]![row]
+            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
             return myTitle
         }
     }
     
-    
-    
     @IBAction func nextPage(_ sender: AnyObject) {
+        selectedEvent = tempNameToSlugDict[tempSelectedEvent]!
+        selectedSubevent = tempSlugDict[selectedEvent]![tempSelectedSubevent]!
+        print("EVENT: " + selectedEvent)
+        print("SUB : " + selectedSubevent)
+        var tempDict: [String : String] = [:]
+        tempDict["event"] = selectedEvent
+        tempDict["sub_event"] = selectedSubevent
+        submitInfo["event"] = tempDict
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "Event Info Form") as! EventInfoForm
         self.present(nextViewController, animated:true, completion:nil)

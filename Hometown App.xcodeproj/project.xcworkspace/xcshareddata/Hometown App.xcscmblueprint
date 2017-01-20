@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "94BF7D52B087C878544A9B72851D1F855255A1FB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "94BF7D52B087C878544A9B72851D1F855255A1FB" : 9223372036854775807,
+    "AA023C9090003DBB3E1EA20D4BD55D419734D589" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0A703A69-82BF-4652-AAAF-BC818ABE299E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "94BF7D52B087C878544A9B72851D1F855255A1FB" : "Hometown%20App\/",
+    "AA023C9090003DBB3E1EA20D4BD55D419734D589" : "..\/SwiftSpinner\/SwiftSpinner"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Hometown App",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Hometown App.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/davidthurman\/Dvids-Hometown-iOS-App.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "94BF7D52B087C878544A9B72851D1F855255A1FB"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/icanzilb\/SwiftSpinner.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AA023C9090003DBB3E1EA20D4BD55D419734D589"
+    }
+  ]
+}

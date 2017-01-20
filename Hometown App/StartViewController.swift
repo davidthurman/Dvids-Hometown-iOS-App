@@ -35,9 +35,7 @@ class StartViewController: UIViewController {
                 
                 OperationQueue.main.addOperation {
                     if success {
-                        s.dismiss(animated: true, completion: nil)
-                        //s.navigationController?.viewControllers = [UIStoryboard.main.instantiateViewController(withIdentifier: UserNotificationRegistrationViewController.nameOfClass)]
-                        
+                        s.dismiss(animated: true, completion: nil)                        
                         if #available(iOS 10.0, *) { } else {
                             UIApplication.shared.statusBarStyle = .lightContent
                         }

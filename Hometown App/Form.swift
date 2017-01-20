@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class Form: UIViewController {
     
@@ -16,12 +17,13 @@ class Form: UIViewController {
     var testEvents: [String] = []
     var profileFields: [[String : String]] = []
     let loadingLabel = UILabel(frame: CGRect(x: 0, y: 200, width: 200, height: 30))
+    var timeoutTracker = 0
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
         nextButton.isEnabled = false
-        
         
         loadingLabel.center.x = self.view.center.x
         loadingLabel.textAlignment = .center
@@ -31,51 +33,55 @@ class Form: UIViewController {
         self.scrollView.addSubview(loadingLabel)
 
         fetchJson()
-        
+    }
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+    }
+    func popUp() {
+        let alert = UIAlertController(title: "No Connection", message: "Your request was unable to submit. Would you like to retry your submission or cancel?", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Retry", style: UIAlertActionStyle.default, handler: { action in self.fetchJson()}))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action in self.performSegue(withIdentifier: "cancelSegue", sender: self)}))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func fetchJson() {
-        let config = URLSessionConfiguration.default // Session Configuration
-        let session = URLSession(configuration: config) // Load configuration into Session
-        let url = URL(string: "http://127.0.0.1:8000/profile/" + String(dvidsId))!
         
-        let task = session.dataTask(with: url, completionHandler: {
-            (data, response, error) in
-            if error != nil {
-                print(error!.localizedDescription)
-                self.fetchJson()
-            } else {
-                do {
-                    if let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String: Any]
-                    {
-                        let json2 = JSON(data: data!)
-                        var count: Int = 0
-                        var fieldsArray: [String]
-                        while json2["fields"]["\(count)"] != nil{
-                            var tempDict: [String : String] = [:]
-                            self.testEvents.append(json2["fields"]["\(count)"]["machine_name"].string!)
-                            tempDict["name"] = json2["fields"]["\(count)"]["name"].string!
-                            tempDict["machine_name"] = json2["fields"]["\(count)"]["machine_name"].string!
-                            tempDict["type"] = json2["fields"]["\(count)"]["type"].string!
-                            tempDict["weight"] = json2["fields"]["\(count)"]["weight"].string!
-                            tempDict["placeholder"] = json2["fields"]["\(count)"]["placeholder"].string!
-                            tempDict["value"] = json2["fields"]["\(count)"]["value"].string!
-                            self.profileFields.append(tempDict)
-                            count = count + 1
-                        }
-                        
-                        DispatchQueue.main.async {
-                            self.populate()
-                            self.loadingLabel.isHidden = true
-                            self.nextButton.isEnabled = true
-                        }
-                    }
-                } catch {
-                    print("error in JSONSerialization")
+        Alamofire.request("http://127.0.0.1:8000/profile/" + String(dvidsId)).responseJSON { response in
+            debugPrint(response)
+            
+            if response.response == nil {
+                self.timeoutTracker = self.timeoutTracker + 1
+                if self.timeoutTracker == 5 {
+                    self.timeoutTracker = 0
+                    self.popUp()
+                }
+                else {
+                    sleep(2)
+                    self.fetchJson()
                 }
             }
-        })
-        task.resume()
+            
+            if let json = response.result.value {
+                let jsonTest = JSON(json)
+                for x in jsonTest["fields"] {
+                    var tempDict = [String:String]()
+                    self.testEvents.append(x.1["machine_name"].string!)
+                    tempDict["machine_name"] = x.1["machine_name"].string!
+                    tempDict["name"] = x.1["name"].string!
+                    tempDict["type"] = x.1["type"].string!
+                    tempDict["value"] = x.1["value"].string!
+                    tempDict["weight"] = x.1["weight"].string!
+                    if tempDict["type"] == "text" {
+                        tempDict["placeholder"] = x.1["placeholder"].string!
+                    }
+                    self.profileFields.append(tempDict)
+                }
+                self.populate()
+                self.loadingLabel.isHidden = true
+                self.nextButton.isEnabled = true
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -85,7 +91,7 @@ class Form: UIViewController {
     func populate(){
         let screenSize: CGRect = UIScreen.main.bounds
         let screenWidth = screenSize.width
-        var scrollHeight = (testEvents.count * 50) + (testEvents.count * 75) + 300
+        let scrollHeight = (testEvents.count * 50) + (testEvents.count * 75) + 300
 
         self.scrollView.contentSize = CGSize(width: screenWidth, height: CGFloat(scrollHeight));
         
@@ -161,21 +167,14 @@ class Form: UIViewController {
             if let theLabel = self.view.viewWithTag(x) as? UITextField {
                 userInfo[testEvents[x-1]] = theLabel.text!
             }
-        }
-        if let datePicker = self.view.viewWithTag(321) as? UIDatePicker {
+        
+            if let datePicker = self.view.viewWithTag(321) as? UIDatePicker {
+                
+            }
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        for x in profileFields {
-            
-        }
-        
-        if segue.identifier == "personalSegue" ,
-            let nextScene = segue.destination as? PictureViewController
-        {
-        }
     }
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if (sender as! UIButton).currentTitle! == "Next" {

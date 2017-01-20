@@ -34,8 +34,10 @@
 		32443B411DBA69C9003AAC4E /* XCGLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32443B371DBA6215003AAC4E /* XCGLogger.framework */; };
 		32443B421DBA69C9003AAC4E /* XCGLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 32443B371DBA6215003AAC4E /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		32490CB61DCB89C3001F754D /* EventInfoForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32490CB51DCB89C3001F754D /* EventInfoForm.swift */; };
+		3261421E1E318BAD0010DC62 /* background_image_1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3261421D1E318BAD0010DC62 /* background_image_1.jpg */; };
 		327859E81DD494F100F81301 /* EventMediaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 327859E71DD494F100F81301 /* EventMediaController.swift */; };
 		32915F141DCA180C0001782C /* Form.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32915F131DCA180C0001782C /* Form.swift */; };
+		32EAE6B31E2E52AB00F53BDD /* SwiftSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32EAE6B21E2E52AB00F53BDD /* SwiftSpinner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -81,8 +83,10 @@
 		32443B391DBA6250003AAC4E /* NSDateISO8601.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateISO8601.swift; sourceTree = "<group>"; };
 		32443B3B1DBA62E1003AAC4E /* UserNotificationRegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserNotificationRegistrationViewController.swift; sourceTree = "<group>"; };
 		32490CB51DCB89C3001F754D /* EventInfoForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventInfoForm.swift; sourceTree = "<group>"; };
+		3261421D1E318BAD0010DC62 /* background_image_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background_image_1.jpg; sourceTree = "<group>"; };
 		327859E71DD494F100F81301 /* EventMediaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventMediaController.swift; sourceTree = "<group>"; };
 		32915F131DCA180C0001782C /* Form.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Form.swift; sourceTree = "<group>"; };
+		32EAE6B21E2E52AB00F53BDD /* SwiftSpinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftSpinner.swift; path = ../../../SwiftSpinner/SwiftSpinner/SwiftSpinner/SwiftSpinner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +124,7 @@
 		32443B0B1DBA3118003AAC4E /* Hometown App */ = {
 			isa = PBXGroup;
 			children = (
+				3261421D1E318BAD0010DC62 /* background_image_1.jpg */,
 				32097CB01DC24B4200AEFB7D /* avatar.png */,
 				32443B311DBA504B003AAC4E /* Third Party */,
 				32443B2A1DBA4D34003AAC4E /* Enums */,
@@ -175,6 +180,7 @@
 		32443B311DBA504B003AAC4E /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
+				32EAE6B21E2E52AB00F53BDD /* SwiftSpinner.swift */,
 				32443B321DBA5062003AAC4E /* SwiftyJSON.swift */,
 				32443B391DBA6250003AAC4E /* NSDateISO8601.swift */,
 			);
@@ -253,6 +259,7 @@
 			files = (
 				32097CB11DC24B4200AEFB7D /* avatar.png in Resources */,
 				32443B171DBA3119003AAC4E /* LaunchScreen.storyboard in Resources */,
+				3261421E1E318BAD0010DC62 /* background_image_1.jpg in Resources */,
 				32443B141DBA3119003AAC4E /* Assets.xcassets in Resources */,
 				32443B121DBA3119003AAC4E /* Main.storyboard in Resources */,
 			);
@@ -282,6 +289,7 @@
 				32443B2E1DBA4DC1003AAC4E /* DvidsOauth.swift in Sources */,
 				3217049B1DD0FC44006C17E1 /* ReviewPage.swift in Sources */,
 				32443B221DBA47BC003AAC4E /* StartViewController.swift in Sources */,
+				32EAE6B31E2E52AB00F53BDD /* SwiftSpinner.swift in Sources */,
 				32443B301DBA5001003AAC4E /* UserDefaultKeys.swift in Sources */,
 				32443B3A1DBA6250003AAC4E /* NSDateISO8601.swift in Sources */,
 				32915F141DCA180C0001782C /* Form.swift in Sources */,

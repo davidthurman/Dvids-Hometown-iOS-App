@@ -59,7 +59,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VX1-U2-HXa">
-                                <color key="backgroundColor" red="0.76509146341463419" green="0.76509146341463419" blue="0.76509146341463419" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.61280599892395982" green="0.61280599892395982" blue="0.61280599892395982" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="ChP-JM-8sI"/>
                                     <constraint firstAttribute="width" constant="256" id="Prl-Pg-sFl"/>
@@ -72,7 +72,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w7a-TN-Kx1">
-                                <color key="backgroundColor" red="0.76470588235294112" green="0.76470588235294112" blue="0.76470588235294112" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.64313725490196083" green="0.64313725490196083" blue="0.64313725490196083" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="hIJ-V7-cIQ"/>
                                     <constraint firstAttribute="width" constant="256" id="t1j-36-yGR"/>
@@ -90,10 +90,15 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" alpha="0.25" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_image_1.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="BB5-gc-PUx"/>
                         </subviews>
                         <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96470588235294119" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="BB5-gc-PUx" firstAttribute="leading" secondItem="fLM-QE-OAt" secondAttribute="leading" id="CoK-YI-yhL"/>
+                            <constraint firstAttribute="trailing" secondItem="BB5-gc-PUx" secondAttribute="trailing" id="EVR-HD-wCd"/>
+                            <constraint firstItem="kud-Di-RuG" firstAttribute="top" secondItem="BB5-gc-PUx" secondAttribute="bottom" id="FpO-vA-qS9"/>
                             <constraint firstItem="PJn-9M-wmL" firstAttribute="top" secondItem="w7a-TN-Kx1" secondAttribute="bottom" constant="18" id="K1r-fA-3v3"/>
+                            <constraint firstItem="BB5-gc-PUx" firstAttribute="top" secondItem="fLM-QE-OAt" secondAttribute="top" id="UAI-ZW-PiL"/>
                             <constraint firstItem="w7a-TN-Kx1" firstAttribute="leading" secondItem="PJn-9M-wmL" secondAttribute="trailing" constant="-149" id="X11-ya-EEm"/>
                             <constraint firstItem="PJn-9M-wmL" firstAttribute="centerY" secondItem="fLM-QE-OAt" secondAttribute="centerY" id="bAN-g2-p9B"/>
                             <constraint firstAttribute="trailingMargin" secondItem="VX1-U2-HXa" secondAttribute="trailing" constant="44" id="bfW-BP-cW4"/>
@@ -107,7 +112,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JWV-9n-jhb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2295.1999999999998" y="101.19940029985008"/>
+            <point key="canvasLocation" x="-2295.1999999999998" y="98.50074962518741"/>
         </scene>
         <!--Picture View Controller-->
         <scene sceneID="Nkr-ON-kDF">
@@ -159,8 +164,7 @@
                                     <color key="titleColor" red="0.49803921569999998" green="0.17254901959999999" blue="0.1647058824" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="update:" destination="72j-Eb-Lyi" eventType="touchUpInside" id="VRm-OS-upW"/>
-                                    <segue destination="UKG-43-kuT" kind="show" id="uEU-lm-gYK"/>
+                                    <action selector="updateButton:" destination="72j-Eb-Lyi" eventType="touchUpInside" id="eQO-rB-Gjg"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WDa-Qj-Phj">
@@ -197,11 +201,12 @@
                     </view>
                     <connections>
                         <outlet property="eventPicture" destination="gJ2-yS-HYl" id="OaX-0U-oJb"/>
+                        <segue destination="UKG-43-kuT" kind="show" identifier="updateSegue" id="UFo-Jq-DZz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VGN-lH-W0J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1156" y="-788.45577211394311"/>
+            <point key="canvasLocation" x="-1370" y="-788"/>
         </scene>
         <!--Main Page View Controller-->
         <scene sceneID="R7P-al-CJK">
@@ -249,7 +254,7 @@
                                     <color key="titleColor" red="0.49803921580314636" green="0.17254902422428131" blue="0.16470588743686676" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="UKG-43-kuT" kind="show" id="ivt-po-Nxd"/>
+                                    <segue destination="UKG-43-kuT" kind="show" identifier="cancelSegue" id="ivt-po-Nxd"/>
                                 </connections>
                             </button>
                             <pickerView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d8K-3z-C05">
@@ -331,6 +336,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="tintColor" red="0.49803921569999998" green="0.17254901959999999" blue="0.1647058824" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Submit"/>
+                                <connections>
+                                    <action selector="submit:" destination="OrN-dE-xju" eventType="touchUpInside" id="gyA-w0-FE1"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -495,7 +503,7 @@
                                     <color key="titleColor" red="0.49803921569999998" green="0.17254901959999999" blue="0.1647058824" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="UKG-43-kuT" kind="show" id="E4a-Ro-dUa"/>
+                                    <segue destination="UKG-43-kuT" kind="show" identifier="cancelSegue" id="E4a-Ro-dUa"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -584,20 +592,22 @@
                     </view>
                     <connections>
                         <outlet property="scrollView" destination="M0f-DQ-xKh" id="lQk-bW-AIT"/>
+                        <segue destination="UKG-43-kuT" kind="show" identifier="cancelSegue" id="EmV-8o-GDU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XJr-LA-pPO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1156" y="976"/>
+            <point key="canvasLocation" x="-1268" y="976"/>
         </scene>
     </scenes>
     <resources>
         <image name="avatar.png" width="1280" height="1210"/>
+        <image name="background_image_1.jpg" width="272" height="420"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ivt-po-Nxd"/>
-        <segue reference="NPp-bM-p9w"/>
         <segue reference="BVA-2z-xY3"/>
-        <segue reference="7Lo-2g-iup"/>
+        <segue reference="EmV-8o-GDU"/>
+        <segue reference="3lI-MO-kKQ"/>
+        <segue reference="NPp-bM-p9w"/>
     </inferredMetricsTieBreakers>
 </document>
