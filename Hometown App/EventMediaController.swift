@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class EventMediaController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
@@ -94,10 +95,40 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
         
     }
     @IBAction func uploadPhotos(_ sender: AnyObject) {
-        imageFromSource.allowsEditing = false
-        imageFromSource.sourceType = .photoLibrary
-        imageFromSource.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
-        present(imageFromSource, animated: true, completion: nil)
+        let status = PHPhotoLibrary.authorizationStatus()
+        if (status == PHAuthorizationStatus.authorized) {
+            imageFromSource.allowsEditing = false
+            imageFromSource.sourceType = .photoLibrary
+            imageFromSource.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+            print("ZZZ")
+            present(imageFromSource, animated: true, completion: nil)
+            print("YYY")
+        }
+        else {
+            PHPhotoLibrary.requestAuthorization({ (newStatus) in
+                
+                if (newStatus == PHAuthorizationStatus.authorized) {
+                    self.imageFromSource.allowsEditing = false
+                    self.imageFromSource.sourceType = .photoLibrary
+                    self.imageFromSource.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+                    self.tempPresent()
+                }
+                    
+                else {
+                    self.needToAuthorize(notAllowed: "library")
+                }
+            })
+        }
+    }
+    
+    func tempPresent(){
+        present(self.imageFromSource, animated: true, completion: nil)
+    }
+    
+    func needToAuthorize(notAllowed: String){
+        let alert = UIAlertController(title: "Permission Denies", message: "You must allow this app to access your " + notAllowed + " from your settings in order to use this functionality", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction func uploadVideos(_ sender: AnyObject) {
@@ -115,7 +146,34 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
         }
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        print("AA")
+        var chosenImage: UIImage?
+        var type = "image"
+        var vidUrl: URL?
+        if let temp = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            chosenImage = temp
+        }
+        else {
+            var videoURL = info["UIImagePickerControllerMediaURL"] as? NSURL
+            print(videoURL)
+            let filePath: URL = videoURL as! URL
+            vidUrl = filePath
+            do {
+                let asset = AVURLAsset(url: filePath , options: nil)
+                let imgGenerator = AVAssetImageGenerator(asset: asset)
+                imgGenerator.appliesPreferredTrackTransform = true
+                let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(0, 1), actualTime: nil)
+                let thumbnail = UIImage(cgImage: cgImage)
+                chosenImage = thumbnail
+                // thumbnail here
+                type = "video"
+            } catch let error {
+                print("*** Error generating thumbnail: \(error.localizedDescription)")
+            }
+        }
+        
+        //let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        print("BB")
         let eventPicture = UIImageView(image: chosenImage)
         eventPicture.contentMode = .scaleAspectFit
         let screenSize: CGRect = UIScreen.main.bounds
@@ -126,14 +184,22 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
         self.scrollView.contentSize = CGSize(width: screenWidth, height: CGFloat(scrollViewHeight));
         self.scrollView.addSubview(eventPicture)
         dismiss(animated:true, completion: nil) //5
-        let myImage = ImageWithTag(img: chosenImage, imgId: currentTag)
-        eventPictures.append(myImage)
+        var myImage: ImageWithTag?
+        if type == "image" {
+            myImage = ImageWithTag(img: chosenImage!, imgId: currentTag)
+            eventPictures.append(myImage!)
+        }
+        else{
+            myImage = ImageWithTag(img: chosenImage!, imgId: currentTag, vidUrl: vidUrl!)
+            eventPictures.append(myImage!)
+        }
+        
         var myWidth: Float = 0
-        let imageRatio: Float = Float(myImage.img!.size.width) / Float(myImage.img!.size.height)
+        let imageRatio: Float = Float(myImage!.img!.size.width) / Float(myImage!.img!.size.height)
         let viewRatio: Float = Float(eventPicture.frame.size.width) / Float(eventPicture.frame.size.height)
         if imageRatio < viewRatio {
-            let scale: Float = Float(eventPicture.frame.size.height) / Float(myImage.img!.size.height)
-            let width: Float = scale * Float(myImage.img!.size.width)
+            let scale: Float = Float(eventPicture.frame.size.height) / Float(myImage!.img!.size.height)
+            let width: Float = scale * Float(myImage!.img!.size.width)
             myWidth = width
         }
         let testing = Int(screenWidth / 2) + Int(myWidth / 2)

@@ -16,8 +16,15 @@ class ImageWithTag
     
     var imgID : Int? = nil
     
+    var vidUrl : URL? = nil
+    
     init (img: UIImage, imgId: Int) {
         self.img = img
         self.imgID = imgId
+    }
+    init (img: UIImage, imgId: Int, vidUrl: URL){
+        self.img = img
+        self.imgID = imgId
+        self.vidUrl = vidUrl
     }
 }

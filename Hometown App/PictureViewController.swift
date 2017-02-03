@@ -8,6 +8,8 @@
 
 import UIKit
 import Alamofire
+import AVFoundation
+import Photos
 
 class PictureViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
@@ -30,8 +32,9 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
     }
     
     func profileUpdate() {
+        
         userImage = eventPicture.image
-        let postUrl = "http://192.168.10.17:8000/profile/" + String(dvidsId)
+        let postUrl = url + "/profile/" + String(dvidsId)
         var fields: [String:String] = [:]
         for x in userInfo {
             fields[x.key] = x.value
@@ -44,11 +47,33 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
         Alamofire.request(postUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .responseJSON { response in
             if response.response == nil {
+                SwiftSpinner.hide()
                 self.popUp()
             }
             else {
-                self.performSegue(withIdentifier: "updateSegue", sender: nil)
+                self.uploadImage()
             }
+        }
+        
+    }
+    
+    func uploadImage(){
+        if UIImagePNGRepresentation(eventPicture.image!) != UIImagePNGRepresentation(#imageLiteral(resourceName: "avatar.png")) {
+            let imageData = UIImageJPEGRepresentation(eventPicture.image!, 1)
+            Alamofire.upload(imageData!, to: url + "/profile/" + String(dvidsId) + "/media").responseJSON { response in
+                if response.response == nil {
+                    SwiftSpinner.hide()
+                    self.popUp()
+                }
+                else {
+                    SwiftSpinner.hide()
+                    self.performSegue(withIdentifier: "updateSegue", sender: nil)
+                }
+            }
+        }
+        else {
+            SwiftSpinner.hide()
+            self.performSegue(withIdentifier: "updateSegue", sender: nil)
         }
     }
     
@@ -56,18 +81,66 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
         super.didReceiveMemoryWarning()
     }
     @IBAction func takePicture(_ sender: AnyObject) {
-        imageFromSource.allowsEditing = false
-        imageFromSource.sourceType = UIImagePickerControllerSourceType.camera
-        imageFromSource.cameraCaptureMode = .photo
-        imageFromSource.modalPresentationStyle = .fullScreen
-        present(imageFromSource,animated: true,completion: nil)
+        if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) ==  AVAuthorizationStatus.authorized
+        {
+            imageFromSource.allowsEditing = false
+            imageFromSource.sourceType = UIImagePickerControllerSourceType.camera
+            imageFromSource.cameraCaptureMode = .photo
+            imageFromSource.modalPresentationStyle = .fullScreen
+            present(imageFromSource,animated: true,completion: nil)
+        }
+        else
+        {
+            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: { (granted :Bool) -> Void in
+                if granted == true
+                {
+                    self.imageFromSource.allowsEditing = false
+                    self.imageFromSource.sourceType = UIImagePickerControllerSourceType.camera
+                    self.imageFromSource.cameraCaptureMode = .photo
+                    self.imageFromSource.modalPresentationStyle = .fullScreen
+                    self.tempPresent()
+                }
+                else
+                {
+                    self.needToAuthorize(notAllowed: "camera")
+                }
+            });
+        }
+        
     }
 
     @IBAction func fromLibrary(_ sender: AnyObject) {
-        imageFromSource.allowsEditing = false
-        imageFromSource.sourceType = .photoLibrary
-        imageFromSource.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
-        present(imageFromSource, animated: true, completion: nil)
+        let status = PHPhotoLibrary.authorizationStatus()
+        if (status == PHAuthorizationStatus.authorized) {
+            imageFromSource.allowsEditing = false
+            imageFromSource.sourceType = .photoLibrary
+            imageFromSource.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+            present(imageFromSource, animated: true, completion: nil)
+        }
+        else {
+            PHPhotoLibrary.requestAuthorization({ (newStatus) in
+                
+                if (newStatus == PHAuthorizationStatus.authorized) {
+                    self.imageFromSource.allowsEditing = false
+                    self.imageFromSource.sourceType = .photoLibrary
+                    self.imageFromSource.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
+                    self.tempPresent()
+                }
+                    
+                else {
+                    self.needToAuthorize(notAllowed: "library")
+                }
+            })
+        }
+    }
+    func tempPresent(){
+        present(self.imageFromSource, animated: true, completion: nil)
+    }
+    
+    func needToAuthorize(notAllowed: String){
+        let alert = UIAlertController(title: "Permission Denies", message: "You must allow this app to access your " + notAllowed + " from your settings in order to use this functionality", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func imagePickerController(_ picker: UIImagePickerController,
@@ -83,7 +156,6 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        myImageUploadRequest()
         if segue.identifier == "pictureSegue"
         {
             userImage = eventPicture.image
@@ -91,20 +163,21 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
     }
 
     @IBAction func updateButton(_ sender: AnyObject) {
-        if UIImagePNGRepresentation(eventPicture.image!) != UIImagePNGRepresentation(#imageLiteral(resourceName: "avatar.png")) {
+            SwiftSpinner.show("Updating Profile")
             profileUpdate()
-        }
+    }
+    
+    /*
+    func myImageUploadRequest() {
+        
+            let imageData = UIImageJPEGRepresentation(eventPicture.image!, 1)
+            Alamofire.upload(imageData!, to: url + "/profile/" + String(dvidsId) + "/media").responseJSON { response in
+                debugPrint(response)
+            }
+        
         
     }
-
-    
-    func myImageUploadRequest() {
-        let imageData = UIImageJPEGRepresentation(eventPicture.image!, 1)
-        Alamofire.upload(imageData!, to: "http://localhost:8000/profile/" + String(dvidsId) + "/media").responseJSON { response in
-            debugPrint(response)
-        }
-    }
-
+*/
 }
 
 

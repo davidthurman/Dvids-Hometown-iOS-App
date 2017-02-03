@@ -45,7 +45,7 @@ class EventInfoForm: UIViewController {
     }
     
     func fetchJson(){
-        Alamofire.request("http://127.0.0.1:8000/events/\(selectedEvent)/\(selectedSubevent)").responseJSON { response in
+        Alamofire.request(url + "/events/\(selectedEvent)/\(selectedSubevent)").responseJSON { response in
             debugPrint(response)
             
             if response.response == nil {
@@ -88,7 +88,7 @@ class EventInfoForm: UIViewController {
                     label.center.x = self.view.center.x
                     label.textAlignment = .center
                     label.text = x["name"].string!
-                    label.textColor = UIColor(red:0.50, green:0.17, blue:0.16, alpha:1.0)
+                    label.textColor = textColor
                     self.scrollView.addSubview(label)
                     heightLength = heightLength + 50
                     
@@ -119,6 +119,7 @@ class EventInfoForm: UIViewController {
                         datePicker.center.x = self.view.center.x
                         datePicker.datePickerMode = .date
                         datePicker.tag = count
+                        datePicker.setValue(textColor, forKey: "textColor")
                         self.scrollView.addSubview(datePicker)
                         
                         heightLength = heightLength + 150
@@ -136,7 +137,7 @@ class EventInfoForm: UIViewController {
                             label.center.x = self.view.center.x
                             //label.textAlignment = .center
                             label.text = y.1.string!
-                            label.textColor = UIColor(red:0.50, green:0.17, blue:0.16, alpha:1.0)
+                            label.textColor = textColor
                             self.scrollView.addSubview(label)
                             
                             let switchDemo=UISwitch(frame: CGRect(x:Int(labelPosition),y: heightLength, width:Int(screenWidth), height: 50))
@@ -163,6 +164,7 @@ class EventInfoForm: UIViewController {
                         radioButtons.selectedSegmentIndex = 0
                         radioButtons.center.x = self.view.center.x
                         radioButtons.tag = count
+                        radioButtons.tintColor = textColor
                         self.scrollView.addSubview(radioButtons)
                         heightLength = heightLength + 50
                     }

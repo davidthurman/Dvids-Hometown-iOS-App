@@ -28,7 +28,7 @@ class Form: UIViewController {
         loadingLabel.center.x = self.view.center.x
         loadingLabel.textAlignment = .center
         loadingLabel.text = "Loading..."
-        loadingLabel.textColor = UIColor(red:0.50, green:0.17, blue:0.16, alpha:1.0)
+        loadingLabel.textColor = UIColor(red:255, green:255, blue:255, alpha:1.0)
         loadingLabel.font = UIFont.boldSystemFont(ofSize: 22.0)
         self.scrollView.addSubview(loadingLabel)
 
@@ -47,7 +47,7 @@ class Form: UIViewController {
     
     func fetchJson() {
         
-        Alamofire.request("http://127.0.0.1:8000/profile/" + String(dvidsId)).responseJSON { response in
+        Alamofire.request(url + "/profile/" + String(dvidsId)).responseJSON { response in
             debugPrint(response)
             
             if response.response == nil {
@@ -76,6 +76,15 @@ class Form: UIViewController {
                         tempDict["placeholder"] = x.1["placeholder"].string!
                     }
                     self.profileFields.append(tempDict)
+                    if jsonTest["media"]["profile_image"] != false{
+                        var userImageUrl = jsonTest["media"]["profile_image"].string!
+                        if let filePath = Bundle.main.path(forResource: "imageName", ofType: "jpg"),
+                            let image = UIImage(contentsOfFile: userImageUrl) {
+                            //imageView.contentMode = .scaleAspectFit
+                            userImage = image
+                        }
+                    }
+                    
                 }
                 self.populate()
                 self.loadingLabel.isHidden = true
@@ -111,7 +120,8 @@ class Form: UIViewController {
                 label.center.x = self.view.center.x
                 label.textAlignment = .center
                 label.text = x["placeholder"]
-                label.textColor = UIColor(red:0.50, green:0.17, blue:0.16, alpha:1.0)
+                label.textColor = UIColor(red:255, green:255, blue:255, alpha:1.0)
+                                
                 self.scrollView.addSubview(label)
                 test = test + 50
                 let input = UITextField(frame: CGRect(x: 0, y: test, width: 200, height: 30))

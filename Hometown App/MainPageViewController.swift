@@ -21,6 +21,8 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
     
     @IBOutlet var subeventScroll: UIPickerView!
     
+    var id = ""
+    
     var pickerData = [""]
     var tempSelectedEvent = ""
     var tempSelectedSubevent = ""
@@ -28,6 +30,7 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
     var timeoutTracker = 0
     var tempSlugDict: [String: [String : String]] = [:]
     var tempNameToSlugDict: [String: String] = [:]
+    var tempSubEventToId: [String: Any] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +45,7 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
         loadingLabel.center.x = self.view.center.x
         loadingLabel.textAlignment = .center
         loadingLabel.text = "Loading..."
-        loadingLabel.textColor = UIColor(red:0.50, green:0.17, blue:0.16, alpha:1.0)
+        loadingLabel.textColor = UIColor(red:255, green:255, blue:255, alpha:1.0)
         loadingLabel.font = UIFont.boldSystemFont(ofSize: 22.0)
         self.view.addSubview(loadingLabel)
         
@@ -52,7 +55,7 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
     
     func fetchJson() {
         
-        Alamofire.request("http://127.0.0.1:8000/events").responseJSON { response in
+        Alamofire.request(url + "/events").responseJSON { response in
             debugPrint(response)
             
             if response.response == nil {
@@ -76,6 +79,12 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
                     var tempArray: [String] = []
                     for y in 0...((jsonTest["\(x)"]["sub_events"].count - 1)) {
                         tempDict[jsonTest["\(x)"]["sub_events"]["\(y)"]["name"].string!] = jsonTest["\(x)"]["sub_events"]["\(y)"]["slug"].string!
+                        //tempDict["subevents_id"] = jsonTest["\(x)"]["sub_events"]["\(y)"]["id"].string!
+                        print(#line)
+                        var tempName = jsonTest["\(x)"]["slug"].string! + jsonTest["\(x)"]["sub_events"]["\(y)"]["slug"].string!
+                        print(#line)
+                        self.tempSubEventToId[tempName] = jsonTest["\(x)"]["sub_events"]["\(y)"]["id"].int
+                        print(#line)
                         if x == 0 && y == 0 {
                             self.tempSelectedSubevent = jsonTest["\(x)"]["sub_events"]["0"]["name"].string!
                         }
@@ -151,12 +160,16 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
         }
     }
 
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         if pickerView.tag == 0 {
-            return pickerData[row]
+            let titleData = pickerData[row]
+            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
+            return myTitle
         }
         else {
-            return events[tempSelectedEvent]![row]
+            let titleData = events[tempSelectedEvent]![row]
+            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
+            return myTitle
         }
     }
     
@@ -192,7 +205,13 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
         var tempDict: [String : String] = [:]
         tempDict["event"] = selectedEvent
         tempDict["sub_event"] = selectedSubevent
+        var tempName = selectedEvent + selectedSubevent
+        print("UUU")
+        print(tempSubEventToId[tempName])
+        tempDict["id"] = String(describing: tempSubEventToId[tempName])
         submitInfo["event"] = tempDict
+        print("OOO")
+        print(submitInfo)
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "Event Info Form") as! EventInfoForm
         self.present(nextViewController, animated:true, completion:nil)

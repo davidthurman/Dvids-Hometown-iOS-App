@@ -11,19 +11,25 @@ import UIKit
 
 class StartViewController: UIViewController {
     
+    @IBOutlet var LogInImage: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(StartViewController.login))
+        LogInImage.addGestureRecognizer(tap)
+        LogInImage.isUserInteractionEnabled = true
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    @IBAction func authenticateAction(_ sender: AnyObject) {
-        NotificationNames.appOpenedWithUrl.add(observer: self, selector: #selector(onAppOpenedWithUrl(_:)))
-        presentSafariViewController(url: DvidsOauth.authorizeUrl)
+    func login(){
+        self.performSegue(withIdentifier: "TempLogInSegue", sender: nil)
+        //NotificationNames.appOpenedWithUrl.add(observer: self, selector: #selector(onAppOpenedWithUrl(_:)))
+        //presentSafariViewController(url: DvidsOauth.authorizeUrl)
     }
-    
+
     func onAppOpenedWithUrl(_ notification: Notification) {
         NotificationNames.appOpenedWithUrl.remove(observer: self)
         guard let url = notification.userInfo?["URL"] as? URL else { return }
