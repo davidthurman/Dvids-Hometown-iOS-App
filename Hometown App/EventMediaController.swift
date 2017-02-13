@@ -11,6 +11,8 @@ import Photos
 
 class EventMediaController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
+    @IBOutlet var nextButton: UIButton!
+    @IBOutlet var navigationBar: UINavigationBar!
     @IBOutlet var scrollView: UIScrollView!
     let imageFromSource = UIImagePickerController()
     var scrollHeight: Int = 50
@@ -20,6 +22,10 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        nextButton.backgroundColor = nextButtonColorGreen
+        self.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationBar.shadowImage = UIImage()
+        self.navigationBar.isTranslucent = true
         imageFromSource.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
         populate()
@@ -45,21 +51,30 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
  
                 
                 var myWidth: Float = 0
-                
-                let imageRatio: Float = Float(myImage.img!.size.width) / Float(myImage.img!.size.height)
+                let imageRatio: Float = Float(myImage.img.size.width) / Float(myImage.img.size.height)
                 let viewRatio: Float = Float(eventPicture.frame.size.width) / Float(eventPicture.frame.size.height)
+                var pictureHeight = 0
                 if imageRatio < viewRatio {
-                    let scale: Float = Float(eventPicture.frame.size.height) / Float(myImage.img!.size.height)
-                    let width: Float = scale * Float(myImage.img!.size.width)
+                    let scale: Float = Float(eventPicture.frame.size.height) / Float(myImage.img.size.height)
+                    let width: Float = scale * Float(myImage.img.size.width)
                     myWidth = width
+                    pictureHeight = pictureHeightIndex
+                }
+                else {
+                    let scale: Float = Float(eventPicture.frame.size.height) / Float(myImage.img.size.height)
+                    let width: Float = scale * Float(myImage.img.size.width)
+                    myWidth = width
+                    myWidth = myWidth - 15
+                    myWidth = Float(Int(screenWidth))
+                    pictureHeight = pictureHeightIndex + 12
                 }
                 
                 let testing = Int(screenWidth / 2) + Int(myWidth / 2)
-                let deleteButton = UIButton(frame: CGRect(x:Int(testing - 24), y:pictureHeightIndex, width:25, height:25))
+                let deleteButton = UIButton(frame: CGRect(x:Int(testing - 24), y:pictureHeight, width:25, height:25))
                 deleteButton.backgroundColor = .red
                 deleteButton.setTitle("x", for: .normal)
                 deleteButton.addTarget(self, action: #selector(EventMediaController.clickMe), for: UIControlEvents.touchUpInside)
-                deleteButton.tag = Int(myImage.imgID!)
+                deleteButton.tag = Int(myImage.imgID)
                 pictureHeightIndex = pictureHeightIndex + 250
                 self.scrollView.contentSize = CGSize(width: screenWidth, height: CGFloat(scrollViewHeight))
                 self.scrollView.addSubview(deleteButton)
@@ -82,17 +97,20 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
 
     }
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if (sender as! UIButton).currentTitle! == "Next" {
-            for x in 0...eventInfo.count {
-                if let theLabel = self.view.viewWithTag(x) as? UITextField {
-                    if theLabel.text! == "" {
-                        return false
+        //Check if the button pressed was the back button or the Next button (Next button is UIButton while back button is a NavBarItem)
+        if sender is UIButton {
+            //Make sure every field has info or else do not perform segue
+            if (sender as! UIButton).currentTitle! == "Next" {
+                for x in 0...eventInfo.count {
+                    if let theLabel = self.view.viewWithTag(x) as? UITextField {
+                        if theLabel.text! == "" {
+                            return false
+                        }
                     }
                 }
             }
         }
         return true
-        
     }
     @IBAction func uploadPhotos(_ sender: AnyObject) {
         let status = PHPhotoLibrary.authorizationStatus()
@@ -100,9 +118,7 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
             imageFromSource.allowsEditing = false
             imageFromSource.sourceType = .photoLibrary
             imageFromSource.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
-            print("ZZZ")
             present(imageFromSource, animated: true, completion: nil)
-            print("YYY")
         }
         else {
             PHPhotoLibrary.requestAuthorization({ (newStatus) in
@@ -131,8 +147,39 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
         self.present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func uploadVideos(_ sender: AnyObject) {
+    @IBAction func takePicture(_ sender: AnyObject) {
+        //If they have allowed camera access, use it. Otherwise, ask them for it
+        if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) ==  AVAuthorizationStatus.authorized
+        {
+            imageFromSource.allowsEditing = false
+            imageFromSource.sourceType = UIImagePickerControllerSourceType.camera
+            imageFromSource.cameraCaptureMode = .photo
+            imageFromSource.modalPresentationStyle = .fullScreen
+            present(imageFromSource,animated: true,completion: nil)
+        }
+        else
+        {
+            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: { (granted :Bool) -> Void in
+                if granted == true
+                {
+                    self.imageFromSource.allowsEditing = false
+                    self.imageFromSource.sourceType = UIImagePickerControllerSourceType.camera
+                    self.imageFromSource.cameraCaptureMode = .photo
+                    self.imageFromSource.modalPresentationStyle = .fullScreen
+                    self.presentImage()
+                }
+                else
+                {
+                    self.needToAuthorize(notAllowed: "camera")
+                }
+            });
+        }
     }
+    
+    func presentImage(){
+        present(self.imageFromSource, animated: true, completion: nil)
+    }
+    
     func clickMe(sender:UIButton!){
         var x = 0
         for picture in eventPictures {
@@ -146,7 +193,6 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
         }
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        print("AA")
         var chosenImage: UIImage?
         var type = "image"
         var vidUrl: URL?
@@ -173,7 +219,6 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
         }
         
         //let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        print("BB")
         let eventPicture = UIImageView(image: chosenImage)
         eventPicture.contentMode = .scaleAspectFit
         let screenSize: CGRect = UIScreen.main.bounds
@@ -195,15 +240,25 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
         }
         
         var myWidth: Float = 0
-        let imageRatio: Float = Float(myImage!.img!.size.width) / Float(myImage!.img!.size.height)
+        let imageRatio: Float = Float(myImage!.img.size.width) / Float(myImage!.img.size.height)
         let viewRatio: Float = Float(eventPicture.frame.size.width) / Float(eventPicture.frame.size.height)
+        var pictureHeight = 0
         if imageRatio < viewRatio {
-            let scale: Float = Float(eventPicture.frame.size.height) / Float(myImage!.img!.size.height)
-            let width: Float = scale * Float(myImage!.img!.size.width)
+            let scale: Float = Float(eventPicture.frame.size.height) / Float(myImage!.img.size.height)
+            let width: Float = scale * Float(myImage!.img.size.width)
             myWidth = width
+            pictureHeight = pictureHeightIndex
         }
-        let testing = Int(screenWidth / 2) + Int(myWidth / 2)
-        let deleteButton = UIButton(frame: CGRect(x:Int(testing - 24), y:pictureHeightIndex, width:25, height:25))
+        else {
+            let scale: Float = Float(eventPicture.frame.size.height) / Float(myImage!.img.size.height)
+            let width: Float = scale * Float(myImage!.img.size.width)
+            myWidth = width
+            myWidth = myWidth - 15
+            myWidth = Float(Int(screenWidth))
+            pictureHeight = pictureHeightIndex + 10
+        }
+        var testing = Int(screenWidth / 2) + Int(myWidth / 2)
+        let deleteButton = UIButton(frame: CGRect(x:Int(testing - 24), y:pictureHeight, width:25, height:25))
         deleteButton.backgroundColor = .red
         deleteButton.setTitle("x", for: .normal)
         deleteButton.addTarget(self, action: #selector(EventMediaController.clickMe), for: UIControlEvents.touchUpInside)
@@ -217,6 +272,31 @@ class EventMediaController: UIViewController, UINavigationControllerDelegate, UI
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
+    }
+    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
+        let size = image.size
+        
+        let widthRatio  = targetSize.width  / image.size.width
+        let heightRatio = targetSize.height / image.size.height
+        
+        // Figure out what our orientation is, and use that to form the rectangle
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        }
+        
+        // This is the rect that we've calculated out and this is what is actually used below
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        // Actually do the resizing to the rect using the ImageContext stuff
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
     }
     
 

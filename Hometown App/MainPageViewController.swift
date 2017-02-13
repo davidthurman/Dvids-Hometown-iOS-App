@@ -11,18 +11,14 @@ import Alamofire
 
 class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerViewDelegate {
     
+    @IBOutlet var navigationBar: UINavigationBar!
     @IBOutlet var nextButton: UIButton!
-    
     @IBOutlet var eventLabel: UILabel!
     @IBOutlet var eventScroll: UIPickerView!
-
     @IBOutlet var subeventLabel: UILabel!
     var events: [String : [String]] = [:]
-    
     @IBOutlet var subeventScroll: UIPickerView!
-    
     var id = ""
-    
     var pickerData = [""]
     var tempSelectedEvent = ""
     var tempSelectedSubevent = ""
@@ -34,14 +30,15 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        nextButton.backgroundColor = nextButtonColorGray
+        self.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationBar.shadowImage = UIImage()
+        self.navigationBar.isTranslucent = true
         eventScroll.isHidden = true
         eventLabel.isHidden = true
         subeventScroll.isHidden = true
         subeventLabel.isHidden = true
         nextButton.isEnabled = false
-        
-        
         loadingLabel.center.x = self.view.center.x
         loadingLabel.textAlignment = .center
         loadingLabel.text = "Loading..."
@@ -54,10 +51,9 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
     }
     
     func fetchJson() {
-        
         Alamofire.request(url + "/events").responseJSON { response in
             debugPrint(response)
-            
+            //If there is still no response after 5 calls, present them with popUp()
             if response.response == nil {
                 self.timeoutTracker = self.timeoutTracker + 1
                 if self.timeoutTracker == 5 {
@@ -69,32 +65,28 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
                     self.fetchJson()
                 }
             }
-            
             if let json = response.result.value {
-                let jsonTest = JSON(json)
-                print("GGG")
-                print(jsonTest)
-                for x in 0...(jsonTest.count - 1) {
+                let jsonResults = JSON(json)
+                for x in 0...(jsonResults.count - 1) {
                     var tempDict: [String : String] = [:]
                     var tempArray: [String] = []
-                    for y in 0...((jsonTest["\(x)"]["sub_events"].count - 1)) {
-                        tempDict[jsonTest["\(x)"]["sub_events"]["\(y)"]["name"].string!] = jsonTest["\(x)"]["sub_events"]["\(y)"]["slug"].string!
-                        //tempDict["subevents_id"] = jsonTest["\(x)"]["sub_events"]["\(y)"]["id"].string!
+                    for y in 0...((jsonResults["\(x)"]["sub_events"].count - 1)) {
+                        tempDict[jsonResults["\(x)"]["sub_events"]["\(y)"]["name"].string!] = jsonResults["\(x)"]["sub_events"]["\(y)"]["slug"].string!
                         print(#line)
-                        var tempName = jsonTest["\(x)"]["slug"].string! + jsonTest["\(x)"]["sub_events"]["\(y)"]["slug"].string!
+                        var tempName = jsonResults["\(x)"]["slug"].string! + jsonResults["\(x)"]["sub_events"]["\(y)"]["slug"].string!
                         print(#line)
-                        self.tempSubEventToId[tempName] = jsonTest["\(x)"]["sub_events"]["\(y)"]["id"].int
+                        self.tempSubEventToId[tempName] = jsonResults["\(x)"]["sub_events"]["\(y)"]["id"].int
                         print(#line)
                         if x == 0 && y == 0 {
-                            self.tempSelectedSubevent = jsonTest["\(x)"]["sub_events"]["0"]["name"].string!
+                            self.tempSelectedSubevent = jsonResults["\(x)"]["sub_events"]["0"]["name"].string!
                         }
-                        tempArray.append(jsonTest["\(x)"]["sub_events"]["\(y)"]["name"].string!)
+                        tempArray.append(jsonResults["\(x)"]["sub_events"]["\(y)"]["name"].string!)
                     }
-                    self.tempNameToSlugDict[jsonTest["\(x)"]["name"].string!] = jsonTest["\(x)"]["slug"].string!
-                    self.tempSlugDict[jsonTest["\(x)"]["slug"].string!] = tempDict
-                    self.events[jsonTest["\(x)"]["name"].string!] = tempArray
+                    self.tempNameToSlugDict[jsonResults["\(x)"]["name"].string!] = jsonResults["\(x)"]["slug"].string!
+                    self.tempSlugDict[jsonResults["\(x)"]["slug"].string!] = tempDict
+                    self.events[jsonResults["\(x)"]["name"].string!] = tempArray
                     if x == 0 {
-                        self.tempSelectedEvent = jsonTest["\(x)"]["name"].string!
+                        self.tempSelectedEvent = jsonResults["\(x)"]["name"].string!
                     }
                     
                     let test = self.events.sorted(by: { $0.0 < $1.0 })
@@ -124,6 +116,7 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
                         self.subeventScroll.isHidden = false
                         self.subeventLabel.isHidden = false
                         self.nextButton.isEnabled = true
+                        self.nextButton.backgroundColor = nextButtonColorGreen
                     }
                 }
             }
@@ -185,6 +178,7 @@ class MainPageViewController: UIViewController,UIPickerViewDataSource,UIPickerVi
     }
     
     func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        //Tag 0 represents the event scroller and tag 1 represents the subevent scroller
         if pickerView.tag == 0 {
             let titleData = pickerData[row]
             let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])

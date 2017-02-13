@@ -14,8 +14,14 @@ class ReviewPage: UIViewController {
     
     @IBOutlet var scrollView: UIScrollView!
     
+    @IBOutlet var nextButton: UIButton!
+    @IBOutlet var navigationBar: UINavigationBar!
     override func viewDidLoad() {
         super.viewDidLoad()
+        nextButton.backgroundColor = nextButtonColorGreen
+        self.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationBar.shadowImage = UIImage()
+        self.navigationBar.isTranslucent = true
         // Do any additional setup after loading the view, typically from a nib.
         populate()
     }
@@ -52,7 +58,12 @@ class ReviewPage: UIViewController {
             label = UILabel(frame: CGRect(x: 0, y: heightLength, width: 200, height: 21))
             label.center.x = self.view.center.x
             label.textAlignment = .center
-            label.text = x.value
+            if x.value == ""{
+                label.text = "(Blank)"
+            }
+            else {
+                label.text = x.value
+            }
             label.textColor = UIColor(red:255, green:255, blue:255, alpha:1.0)
             self.scrollView.addSubview(label)
             heightLength = heightLength + 50
@@ -78,13 +89,16 @@ class ReviewPage: UIViewController {
         }
         for x in eventPictures {
             let eventPicture = UIImageView(image: x.img)
+            eventPicture.contentMode = .scaleAspectFit
             let screenSize: CGRect = UIScreen.main.bounds
             let screenWidth = screenSize.width
             eventPicture.frame = CGRect(x: 0, y: heightLength, width: Int(screenWidth), height: 200)
-            eventPicture.contentMode = .scaleAspectFit
+            
             self.scrollView.addSubview(eventPicture)
             heightLength = heightLength + 250
-        }
+            
+            
+            }
     }
     @IBAction func submit(_ sender: AnyObject) {
         SwiftSpinner.show("Creating New Event")
@@ -102,11 +116,17 @@ class ReviewPage: UIViewController {
             .responseJSON { response in
                 if response.response == nil {
                     sleep(2)
-                    self.createEventFail()
+                    self.submissionFailed()
                 }
                 else {
                     sleep(2)
-                    self.createEventSuccess()
+                    if eventPictures.count == 0 {
+                        self.clearCache()
+                        self.submissionSuccess()
+                    }
+                    else {
+                        self.myImageUploadRequest()
+                    }
                 }
         }
         /*
@@ -127,17 +147,6 @@ class ReviewPage: UIViewController {
  */
     }
     
-    func createEventFail() {
-        //SwiftSpinner.hide()
-        print("Fail")
-    }
-    
-    func createEventSuccess() {
-        print("Success")
-        
-        myImageUploadRequest()
-    }
-    
     func myImageUploadRequest() {
         for x in eventPictures {
             var counter = 0
@@ -154,8 +163,13 @@ class ReviewPage: UIViewController {
                 Alamofire.upload(x.vidUrl!, to: url + "/profile/123/event/" + "1" + "/media").responseJSON { response in
                     debugPrint(response)
                     if response.response == nil {
+                        self.submissionFailed()
                         print("fail")
                     } else {
+                        if x.imgID == eventPictures.last?.imgID {
+                            self.clearCache()
+                            self.submissionSuccess()
+                        }
                         print("pass")
                     }
                 
@@ -164,23 +178,21 @@ class ReviewPage: UIViewController {
  
             //This is an image
             else {
-                let imageData = UIImageJPEGRepresentation(x.img!, 1)
+                let imageData = UIImageJPEGRepresentation(x.img, 1)
                 Alamofire.upload(imageData!, to: url + "/profile/123/event/" + "1" + "/media").responseJSON { response in
-                    print("QQQQQ")
-                    print(response.debugDescription)
                     if response.response == nil {
                         counter = counter + 1
                         if counter == 5 {
                             print("Unable to upload media")
+                            self.submissionFailed()
                         }
                     }
                     else {
-                        eventOptions = [:]
-                        eventPictures = []
-                        submitInfo = [:]
-                        eventInfo = [:]
-                        userInfo = [:]
-                        self.performSegue(withIdentifier: "submitSegue", sender: nil)
+                        if x.imgID == eventPictures.last?.imgID {
+                            self.clearCache()
+                            self.submissionSuccess()
+                        }
+                        
                     }
                 }
             }
@@ -189,6 +201,37 @@ class ReviewPage: UIViewController {
             
             
         }
+        
+    }
+    
+    func submissionSuccess(){
         SwiftSpinner.hide()
+        let alert = UIAlertController(title: "Submission Succeeded", message: "Your submission was successfully received.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in self.returnHome()}))
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+    func submissionFailed(){
+        SwiftSpinner.hide()
+        let alert = UIAlertController(title: "Submission Failed", message: "Your submission was not received.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in self.handleFail()}))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func handleFail(){
+        
+    }
+    
+    func returnHome(){
+        performSegue(withIdentifier: "submitSegue", sender: nil)
+    }
+    
+    func clearCache(){
+        eventOptions = [:]
+        eventPictures = []
+        submitInfo = [:]
+        eventInfo = [:]
+        userInfo = [:]
     }
 }

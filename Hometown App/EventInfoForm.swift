@@ -13,16 +13,25 @@ class EventInfoForm: UIViewController {
     
     @IBOutlet var scrollView: UIScrollView!
     
+    @IBOutlet var navigationBar: UINavigationBar!
     var eventNames: [String] = []
     
     var personalInfo: [String : String] = [:]
+    var requiredFields: [Int: Bool] = [:]
     
+    @IBOutlet var nextButton: UIButton!
     var timeoutTracker = 0
+    var textFields: [UITextField : Bool] = [:]
     
     var optionsDict: [String : [String : UISwitch]] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        nextButton.backgroundColor = nextButtonColorGray
+        self.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationBar.shadowImage = UIImage()
+        self.navigationBar.isTranslucent = true
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
         fetchJson()
@@ -34,6 +43,7 @@ class EventInfoForm: UIViewController {
     
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        checkIfReadyToSegue()
         view.endEditing(true)
     }
     
@@ -87,7 +97,12 @@ class EventInfoForm: UIViewController {
                     let label = UILabel(frame: CGRect(x: 0, y: heightLength, width: 200, height: 21))
                     label.center.x = self.view.center.x
                     label.textAlignment = .center
-                    label.text = x["name"].string!
+                    if x["required"] == "1" {
+                        label.text = x["name"].string! + "*"
+                    }
+                    else {
+                        label.text = x["name"].string!
+                    }
                     label.textColor = textColor
                     self.scrollView.addSubview(label)
                     heightLength = heightLength + 50
@@ -110,6 +125,15 @@ class EventInfoForm: UIViewController {
                         input.clearButtonMode = UITextFieldViewMode.whileEditing;
                         input.tag = count
                         inputDictionary[count] = x["name"].string!
+                        if x["required"] == "1" {
+                            self.textFields[input] = true
+                            self.requiredFields[count] = true
+                        }
+                        else {
+                            self.textFields[input] = false
+                            self.requiredFields[count] = false
+                        }
+                        
                         self.scrollView.addSubview(input)
                         heightLength = heightLength + 50
                         textIndex = textIndex + 1
@@ -172,6 +196,7 @@ class EventInfoForm: UIViewController {
                     
                     count = count + 1
                 }
+                self.checkIfReadyToSegue()
             }
         }
     }
@@ -253,27 +278,59 @@ class EventInfoForm: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if (sender as! UIButton).currentTitle! == "Next" {
-            print(eventInfo)
-            print(eventInfo.count)
-            for x in 1...eventInfo.count {
-                print(x)
-                if let theLabel = self.view.viewWithTag(x) as? UITextField {
-                    if theLabel.text! == "" {
-                        invalidInput()
-                        return false
-                    }
-                   /* if !isValidInput(Input: theLabel.text!) {
-                        invalidInput()
-                        return false
-                    }*/
+    func checkIfReadyToSegue(){
+        //Check if all fields are entered. If so, make the Next button green
+        var makeGreen = true
+        for x in textFields {
+            if x.key.text! == "" && x.value{
+                makeGreen = false
+            }
+            /*
+            if let theLabel = self.view.viewWithTag(x) as? UITextField {
+                if theLabel.text! == "" {
+                    makeGreen = false
                 }
             }
+ */
+        }
+        if makeGreen {
+            nextButton.backgroundColor = nextButtonColorGreen
+        } else {
+            nextButton.backgroundColor = nextButtonColorGray
+        }
+    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        //Check if the button pressed was the back button or the Next button (Next button is UIButton while back button is a NavBarItem)
+        if sender is UIButton {
+            //Make sure every field has info or else do not perform segue
+            if (sender as! UIButton).currentTitle! == "Next" {
+                print(eventInfo)
+                print(eventInfo.count)
+                for x in 1...eventInfo.count {
+                    if let theLabel = self.view.viewWithTag(x) as? UITextField {
+                        print(x)
+                        print("GGG")
+                        if self.requiredFields[x]! && theLabel.text! == ""{
+                            invalidInput()
+                            return false
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            clearCache()
         }
         return true
         
     }
-    
+    func clearCache(){
+        eventOptions = [:]
+        eventPictures = []
+        submitInfo = [:]
+        eventInfo = [:]
+        userInfo = [:]
+    }
     
 }

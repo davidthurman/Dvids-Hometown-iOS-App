@@ -2,7 +2,7 @@ import Foundation
 
 final class DvidsOauth {
     
-    static let redirectUri = "https://www.dvidshub.net/redirect/hometown"
+    static let redirectUri = "http://www.dvidshub.dev/redirect/dvidshometownoauth"
     
     
     static let authorizeUrl: URL = {

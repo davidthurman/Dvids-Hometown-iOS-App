@@ -12,9 +12,9 @@ import UIKit
 class ImageWithTag
 {
     
-    var img : UIImage? = nil
+    var img : UIImage
     
-    var imgID : Int? = nil
+    var imgID : Int
     
     var vidUrl : URL? = nil
     

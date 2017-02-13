@@ -11,8 +11,9 @@ import Alamofire
 
 class Form: UIViewController {
     
+    @IBOutlet var requiredLabel: UILabel!
     @IBOutlet var scrollView: UIScrollView!
-    
+    @IBOutlet var navigationBar: UINavigationBar!
     @IBOutlet var nextButton: UIButton!
     var testEvents: [String] = []
     var profileFields: [[String : String]] = []
@@ -21,10 +22,15 @@ class Form: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        requiredLabel.isHidden = true
+        nextButton.backgroundColor = nextButtonColorGray
+        self.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationBar.shadowImage = UIImage()
+        self.navigationBar.isTranslucent = true
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
         nextButton.isEnabled = false
-        
         loadingLabel.center.x = self.view.center.x
         loadingLabel.textAlignment = .center
         loadingLabel.text = "Loading..."
@@ -34,10 +40,29 @@ class Form: UIViewController {
 
         fetchJson()
     }
+    
     func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        checkIfReadyToSegue()
         view.endEditing(true)
     }
+    
+    func checkIfReadyToSegue(){
+         //Check if all fields are entered. If so, make the Next button green
+        var makeGreen = true
+        for x in 1...testEvents.count {
+            if let theLabel = self.view.viewWithTag(x) as? UITextField {
+                if theLabel.text! == "" {
+                    makeGreen = false
+                }
+            }
+        }
+        if makeGreen {
+            nextButton.backgroundColor = nextButtonColorGreen
+        } else {
+            nextButton.backgroundColor = nextButtonColorGray
+        }
+    }
+    
     func popUp() {
         let alert = UIAlertController(title: "No Connection", message: "Your request was unable to submit. Would you like to retry your submission or cancel?", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Retry", style: UIAlertActionStyle.default, handler: { action in self.fetchJson()}))
@@ -46,11 +71,10 @@ class Form: UIViewController {
     }
     
     func fetchJson() {
-        
         Alamofire.request(url + "/profile/" + String(dvidsId)).responseJSON { response in
             debugPrint(response)
-            
             if response.response == nil {
+                //If there is still no response after 5 calls, present them with popUp()
                 self.timeoutTracker = self.timeoutTracker + 1
                 if self.timeoutTracker == 5 {
                     self.timeoutTracker = 0
@@ -61,21 +85,30 @@ class Form: UIViewController {
                     self.fetchJson()
                 }
             }
-            
             if let json = response.result.value {
                 let jsonTest = JSON(json)
+                //Index every field and append to a temporary dictionary. Then add said dictionary to profileFields
                 for x in jsonTest["fields"] {
                     var tempDict = [String:String]()
                     self.testEvents.append(x.1["machine_name"].string!)
                     tempDict["machine_name"] = x.1["machine_name"].string!
                     tempDict["name"] = x.1["name"].string!
                     tempDict["type"] = x.1["type"].string!
-                    tempDict["value"] = x.1["value"].string!
+                    print(x.1)
+                    print("ZZ")
+                    if let stringValue = x.1["value"].string {
+                        tempDict["value"] = stringValue
+                    }
+                    else {
+                        tempDict["value"] = String(x.1["value"].int!)
+                    }
                     tempDict["weight"] = x.1["weight"].string!
+                    tempDict["required"] = x.1["required"].string!
                     if tempDict["type"] == "text" {
                         tempDict["placeholder"] = x.1["placeholder"].string!
                     }
                     self.profileFields.append(tempDict)
+                    //Find out if they have a profile picture. If so save the url
                     if jsonTest["media"]["profile_image"] != false{
                         var userImageUrl = jsonTest["media"]["profile_image"].string!
                         if let filePath = Bundle.main.path(forResource: "imageName", ofType: "jpg"),
@@ -89,6 +122,7 @@ class Form: UIViewController {
                 self.populate()
                 self.loadingLabel.isHidden = true
                 self.nextButton.isEnabled = true
+                self.requiredLabel.isHidden = false
             }
         }
     }
@@ -104,27 +138,29 @@ class Form: UIViewController {
 
         self.scrollView.contentSize = CGSize(width: screenWidth, height: CGFloat(scrollHeight));
         
-        var test = 50
-        
-        let genderControl = UISegmentedControl(frame: CGRect(x: 0, y: test, width: 200, height: 21))
-        genderControl.center.x = self.view.center.x
-        self.scrollView.addSubview(genderControl)
-        
-        test = test + 50
+        //This will keep track of what height you need to append each UI Element
+        var scrollViewHeightIndex = 50
+        scrollViewHeightIndex = scrollViewHeightIndex + 50
         
         var inputDictionary : [Int: String] = [:]
         var count = 1
         for x in profileFields{
             if x["type"] == "text" {
-                let label = UILabel(frame: CGRect(x: 0, y: test, width: 200, height: 21))
+                let label = UILabel(frame: CGRect(x: 0, y: scrollViewHeightIndex, width: 200, height: 21))
+                if x["required"] == "1"{
+                    label.text = x["placeholder"]! + "*"
+                }
+                else {
+                    label.text = x["placeholder"]
+                }
+                
                 label.center.x = self.view.center.x
                 label.textAlignment = .center
-                label.text = x["placeholder"]
                 label.textColor = UIColor(red:255, green:255, blue:255, alpha:1.0)
                                 
                 self.scrollView.addSubview(label)
-                test = test + 50
-                let input = UITextField(frame: CGRect(x: 0, y: test, width: 200, height: 30))
+                scrollViewHeightIndex = scrollViewHeightIndex + 50
+                let input = UITextField(frame: CGRect(x: 0, y: scrollViewHeightIndex, width: 200, height: 30))
                 input.center.x = self.view.center.x
                 input.textAlignment = .center
                 if x["value"] != nil {
@@ -141,24 +177,30 @@ class Form: UIViewController {
                 input.tag = count
                 inputDictionary[count] = x["name"]
                 self.scrollView.addSubview(input)
-                test = test + 75
+                scrollViewHeightIndex = scrollViewHeightIndex + 75
                 count = count + 1
             }
             else if x["type"] == "date" {
-                let label = UILabel(frame: CGRect(x: 0, y: test, width: 200, height: 21))
+                let label = UILabel(frame: CGRect(x: 0, y: scrollViewHeightIndex, width: 200, height: 21))
+                if x["required"] == "1" {
+                    label.text = x["name"]! + "*"
+                }
+                else {
+                    label.text = x["name"]
+                }
                 label.center.x = self.view.center.x
                 label.textAlignment = .center
-                label.text = x["name"]
+                
                 label.textColor = UIColor(red:0.50, green:0.17, blue:0.16, alpha:1.0)
                 self.scrollView.addSubview(label)
-                test = test + 50
+                scrollViewHeightIndex = scrollViewHeightIndex + 50
                 
-                let datePicker = UIDatePicker(frame: CGRect(x: 0, y: test, width: Int(screenWidth), height: 100))
+                let datePicker = UIDatePicker(frame: CGRect(x: 0, y: scrollViewHeightIndex, width: Int(screenWidth), height: 100))
                 datePicker.center.x = self.view.center.x
                 datePicker.datePickerMode = .date
                 datePicker.tag = count
                 self.scrollView.addSubview(datePicker)
-                test = test + 100
+                scrollViewHeightIndex = scrollViewHeightIndex + 100
                 count = count + 1
             }
             else if x["type"] == "options" {
@@ -169,7 +211,7 @@ class Form: UIViewController {
             }
             
         }
-        
+        checkIfReadyToSegue()
     }
 
     @IBAction func next(_ sender: AnyObject) {
@@ -177,25 +219,37 @@ class Form: UIViewController {
             if let theLabel = self.view.viewWithTag(x) as? UITextField {
                 userInfo[testEvents[x-1]] = theLabel.text!
             }
-        
-            if let datePicker = self.view.viewWithTag(321) as? UIDatePicker {
-                
-            }
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    }
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if (sender as! UIButton).currentTitle! == "Next" {
-            for x in 1...testEvents.count {
-                if let theLabel = self.view.viewWithTag(x) as? UITextField {
-                    if theLabel.text! == "" {
-                        return false
+        //Check if the button pressed was the back button or the Next button (Next button is UIButton while back button is a NavBarItem)
+        if sender is UIButton {
+            //Make sure every field has info or else do not perform segue
+            if (sender as! UIButton).currentTitle! == "Next" {
+                for x in 1...testEvents.count {
+                    if let theLabel = self.view.viewWithTag(x) as? UITextField {
+                        if theLabel.text! == "" {
+                            return false
+                        }
                     }
                 }
             }
         }
+        else{
+            //clearCache()
+            return true
+        }
         return true
     }
+    /*
+    func clearCache(){
+        eventOptions = [:]
+        eventPictures = []
+        submitInfo = [:]
+        eventInfo = [:]
+        userInfo = [:]
+        profileFields = [[:]]
+    }
+ */
 }

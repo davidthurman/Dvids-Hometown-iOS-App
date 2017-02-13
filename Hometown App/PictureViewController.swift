@@ -13,12 +13,19 @@ import Photos
 
 class PictureViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
+    @IBOutlet var updateButton: UIButton!
+    @IBOutlet var navigationBar: UINavigationBar!
     @IBOutlet var eventPicture: UIImageView!
     let imageFromSource = UIImagePickerController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateButton.backgroundColor = nextButtonColorGreen
         imageFromSource.delegate = self
+        self.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationBar.shadowImage = UIImage()
+        self.navigationBar.isTranslucent = true
+        //If they already have a profile picture, display that. Otherwise display a temprorary avatar
         if userImage != nil {
             eventPicture.image = userImage
         }
@@ -32,7 +39,6 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
     }
     
     func profileUpdate() {
-        
         userImage = eventPicture.image
         let postUrl = url + "/profile/" + String(dvidsId)
         var fields: [String:String] = [:]
@@ -42,7 +48,6 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
         let parameters: [String: Any] = [
             "fields":
             fields
-                    
         ]
         Alamofire.request(postUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default)
             .responseJSON { response in
@@ -54,7 +59,6 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
                 self.uploadImage()
             }
         }
-        
     }
     
     func uploadImage(){
@@ -66,21 +70,33 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
                     self.popUp()
                 }
                 else {
-                    SwiftSpinner.hide()
-                    self.performSegue(withIdentifier: "updateSegue", sender: nil)
+                    
+                    self.submissionSuccess()
                 }
             }
         }
         else {
-            SwiftSpinner.hide()
-            self.performSegue(withIdentifier: "updateSegue", sender: nil)
+            self.submissionSuccess()
         }
+    }
+    
+    func submissionSuccess(){
+        SwiftSpinner.hide()
+        let alert = UIAlertController(title: "Submission Succeeded", message: "Your submission was successfully received.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { action in self.returnHome()}))
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    func returnHome(){
+        performSegue(withIdentifier: "updateSegue", sender: nil)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
     @IBAction func takePicture(_ sender: AnyObject) {
+        //If they have allowed camera access, use it. Otherwise, ask them for it
         if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) ==  AVAuthorizationStatus.authorized
         {
             imageFromSource.allowsEditing = false
@@ -98,7 +114,7 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
                     self.imageFromSource.sourceType = UIImagePickerControllerSourceType.camera
                     self.imageFromSource.cameraCaptureMode = .photo
                     self.imageFromSource.modalPresentationStyle = .fullScreen
-                    self.tempPresent()
+                    self.presentImage()
                 }
                 else
                 {
@@ -110,6 +126,7 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
     }
 
     @IBAction func fromLibrary(_ sender: AnyObject) {
+        //If they have allowed photo library access, use it. Otherwise, ask them for it
         let status = PHPhotoLibrary.authorizationStatus()
         if (status == PHAuthorizationStatus.authorized) {
             imageFromSource.allowsEditing = false
@@ -124,7 +141,7 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
                     self.imageFromSource.allowsEditing = false
                     self.imageFromSource.sourceType = .photoLibrary
                     self.imageFromSource.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
-                    self.tempPresent()
+                    self.presentImage()
                 }
                     
                 else {
@@ -133,7 +150,8 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
             })
         }
     }
-    func tempPresent(){
+    
+    func presentImage(){
         present(self.imageFromSource, animated: true, completion: nil)
     }
     
@@ -151,14 +169,16 @@ class PictureViewController: UIViewController, UINavigationControllerDelegate, U
         eventPicture.image = chosenImage
         dismiss(animated:true, completion: nil)
     }
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        
-    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "pictureSegue"
         {
             userImage = eventPicture.image
+        }
+        else {
+            if eventPicture.image != #imageLiteral(resourceName: "avatar.png") {
+                userImage = eventPicture.image
+            }
         }
     }
 
