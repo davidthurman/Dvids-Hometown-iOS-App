@@ -11,7 +11,7 @@ final class DvidsOauth {
             URLQueryItem(name: "client_id", value: AppConfig.dvidsApiPublicKey),
             URLQueryItem(name: "redirect_uri", value: redirectUri),
             URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: "basic email alerts")
+            URLQueryItem(name: "scope", value: "basic email")
         ]
         return urlComponents!.url!
     }()

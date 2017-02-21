@@ -9,7 +9,7 @@ var userInfo: [String: String] = [:]
 var eventOptions: [String: [String : String]] = [:]
 var eventPictures: [ImageWithTag] = []
 var currentTag = 0
-var dvidsId: Int = 1
+var dvidsId: Int = 1218286
 var selectedEvent: String = ""
 var selectedSubevent: String = ""
 var submitInfo : [String : Any] = [:]
@@ -22,7 +22,7 @@ var nextButtonNotReady = UIColor(red:0.63, green:0.20, blue:0.16, alpha:1.0)
 var local = "http://localhost:8000/"
 var server = "http://192.168.10.17:8000/"
 
-var url = local
+var url = server
 
 
 

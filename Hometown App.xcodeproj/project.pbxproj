@@ -45,6 +45,9 @@
 		32B93AA01E423AA000EFE030 /* UpdateProfileBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 32B93A9F1E423AA000EFE030 /* UpdateProfileBackground.png */; };
 		32B93AA21E423B9700EFE030 /* Update Profile Screen2.png in Resources */ = {isa = PBXBuildFile; fileRef = 32B93AA11E423B9700EFE030 /* Update Profile Screen2.png */; };
 		32B93AA41E4277EE00EFE030 /* EventBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 32B93AA31E4277EE00EFE030 /* EventBackground.png */; };
+		32E84BE91E573D2B003E6463 /* UIStoryboard.extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E84BE81E573D2B003E6463 /* UIStoryboard.extension.swift */; };
+		32E84BEB1E573D69003E6463 /* NSObject.extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E84BEA1E573D69003E6463 /* NSObject.extension.swift */; };
+		32E84BED1E574147003E6463 /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E84BEC1E574147003E6463 /* HomeScreenViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -101,6 +104,9 @@
 		32B93A9F1E423AA000EFE030 /* UpdateProfileBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = UpdateProfileBackground.png; path = ../../../../Pictures/Photoshop/UpdateProfileBackground.png; sourceTree = "<group>"; };
 		32B93AA11E423B9700EFE030 /* Update Profile Screen2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Update Profile Screen2.png"; path = "../../../../Pictures/Photoshop/Update Profile Screen2.png"; sourceTree = "<group>"; };
 		32B93AA31E4277EE00EFE030 /* EventBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EventBackground.png; path = ../../../../Pictures/Photoshop/EventBackground.png; sourceTree = "<group>"; };
+		32E84BE81E573D2B003E6463 /* UIStoryboard.extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIStoryboard.extension.swift; path = "../../../../projects/IOS/alerts_ios/DVIDS Alerts/UIStoryboard.extension.swift"; sourceTree = "<group>"; };
+		32E84BEA1E573D69003E6463 /* NSObject.extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSObject.extension.swift; path = "../../../../projects/IOS/alerts_ios/DVIDS Alerts/NSObject.extension.swift"; sourceTree = "<group>"; };
+		32E84BEC1E574147003E6463 /* HomeScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScreenViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +191,7 @@
 				32490CB51DCB89C3001F754D /* EventInfoForm.swift */,
 				3217049A1DD0FC44006C17E1 /* ReviewPage.swift */,
 				327859E71DD494F100F81301 /* EventMediaController.swift */,
+				32E84BEC1E574147003E6463 /* HomeScreenViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -192,6 +199,8 @@
 		32443B231DBA4C3A003AAC4E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				32E84BEA1E573D69003E6463 /* NSObject.extension.swift */,
+				32E84BE81E573D2B003E6463 /* UIStoryboard.extension.swift */,
 				32443B241DBA4C5A003AAC4E /* UIViewController.extension.swift */,
 			);
 			name = Extensions;
@@ -315,6 +324,7 @@
 				32443B0D1DBA3118003AAC4E /* AppDelegate.swift in Sources */,
 				32443B331DBA5062003AAC4E /* SwiftyJSON.swift in Sources */,
 				32443B291DBA4CB1003AAC4E /* AppConfig.swift in Sources */,
+				32E84BE91E573D2B003E6463 /* UIStoryboard.extension.swift in Sources */,
 				32490CB61DCB89C3001F754D /* EventInfoForm.swift in Sources */,
 				32443B351DBA5256003AAC4E /* GlobalConstants.swift in Sources */,
 				32443B2C1DBA4D48003AAC4E /* NotificationNames.swift in Sources */,
@@ -324,10 +334,12 @@
 				32443B251DBA4C5A003AAC4E /* UIViewController.extension.swift in Sources */,
 				32443B2E1DBA4DC1003AAC4E /* DvidsOauth.swift in Sources */,
 				3217049B1DD0FC44006C17E1 /* ReviewPage.swift in Sources */,
+				32E84BED1E574147003E6463 /* HomeScreenViewController.swift in Sources */,
 				32443B221DBA47BC003AAC4E /* StartViewController.swift in Sources */,
 				328C1FE91E401E8C0053DF94 /* SwiftSpinner.swift in Sources */,
 				32443B301DBA5001003AAC4E /* UserDefaultKeys.swift in Sources */,
 				32443B3A1DBA6250003AAC4E /* NSDateISO8601.swift in Sources */,
+				32E84BEB1E573D69003E6463 /* NSObject.extension.swift in Sources */,
 				32915F141DCA180C0001782C /* Form.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class Form: UIViewController {
+class Form: UIViewController,UIPickerViewDataSource,UIPickerViewDelegate {
     
     @IBOutlet var requiredLabel: UILabel!
     @IBOutlet var scrollView: UIScrollView!
@@ -17,8 +17,14 @@ class Form: UIViewController {
     @IBOutlet var nextButton: UIButton!
     var testEvents: [String] = []
     var profileFields: [[String : String]] = []
+    var dropDownValues: [String: [String: String]] = [:]
+    var dropDownInitialValues: [String: Int] = [:]
+    var scrollViewValuesByTag: [Int: [String]] = [:]
+    var rankRowToRankId: [Int: Int] = [:]
     let loadingLabel = UILabel(frame: CGRect(x: 0, y: 200, width: 200, height: 30))
     var timeoutTracker = 0
+    var tagTracker = 100
+    
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,12 +55,17 @@ class Form: UIViewController {
     func checkIfReadyToSegue(){
          //Check if all fields are entered. If so, make the Next button green
         var makeGreen = true
-        for x in 1...testEvents.count {
-            if let theLabel = self.view.viewWithTag(x) as? UITextField {
-                if theLabel.text! == "" {
-                    makeGreen = false
+        if testEvents.count != 0 {
+            for x in 1...testEvents.count {
+                if let theLabel = self.view.viewWithTag(x) as? UITextField {
+                    if theLabel.text! == "" {
+                        makeGreen = false
+                    }
                 }
             }
+        }
+        else {
+            makeGreen = false
         }
         if makeGreen {
             nextButton.backgroundColor = nextButtonColorGreen
@@ -94,8 +105,14 @@ class Form: UIViewController {
                     tempDict["machine_name"] = x.1["machine_name"].string!
                     tempDict["name"] = x.1["name"].string!
                     tempDict["type"] = x.1["type"].string!
-                    print(x.1)
-                    print("ZZ")
+                    if tempDict["type"] == "dropdown" {
+                        self.dropDownInitialValues[x.1["name"].string!] = x.1["value"].int
+                        var tempDropdownValueDict: [String: String] = [:]
+                        for y in x.1["options"] {
+                            tempDropdownValueDict[y.0] = y.1.string!
+                        }
+                        self.dropDownValues[x.1["name"].string!] = tempDropdownValueDict
+                    }
                     if let stringValue = x.1["value"].string {
                         tempDict["value"] = stringValue
                     }
@@ -209,6 +226,42 @@ class Form: UIViewController {
             else if x["type"] == "radio" {
                 
             }
+            else if x["type"] == "dropdown" {
+                var dropdownPickerView: UIPickerView = UIPickerView(frame: CGRect(x: 0, y: scrollViewHeightIndex, width: Int(screenWidth), height: 200))
+                dropdownPickerView.center.x = self.view.center.x
+                dropdownPickerView.tag = count
+                //print(dropDownValues[x["name"]!]!)
+                var arrayOfValues: [String] = []
+                var sortedKeys = Array(dropDownValues[x["name"]!]!.keys).sorted{dropDownValues[x["name"]!]![$0]! < dropDownValues[x["name"]!]![$1]!}
+                var tempTest = 0
+                var xx = 0
+                for y in sortedKeys {
+                    arrayOfValues.append(dropDownValues[x["name"]!]![y]!)
+                    if Int(y) == dropDownInitialValues[x["name"]!]! {
+                        xx = tempTest
+                    }
+                    tempTest = tempTest + 1
+                }
+                
+                if x["name"] == "Rank" {
+                    var count = 0
+                    for y in sortedKeys {
+                        rankRowToRankId[count] = Int(y)
+                        count = count + 1
+                    }
+                   // rankRowToRankId
+                }
+                //dropdownPickerView.selectedRow(inComponent: 18)
+                
+                //dropdownPickerView.
+                scrollViewValuesByTag[count] = arrayOfValues
+                dropdownPickerView.dataSource = self
+                dropdownPickerView.delegate = self
+                dropdownPickerView.selectRow(xx, inComponent: 0, animated: false)
+                self.scrollView.addSubview(dropdownPickerView)
+                count = count + 1
+                scrollViewHeightIndex = scrollViewHeightIndex + 250
+            }
             
         }
         checkIfReadyToSegue()
@@ -218,6 +271,12 @@ class Form: UIViewController {
         for x in 1...testEvents.count {
             if let theLabel = self.view.viewWithTag(x) as? UITextField {
                 userInfo[testEvents[x-1]] = theLabel.text!
+            }
+            else if let thePickerView = self.view.viewWithTag(x) as? UIPickerView {
+                print(thePickerView.selectedRow(inComponent: 0))
+                print(rankRowToRankId[thePickerView.selectedRow(inComponent: 0)]!)
+                print("CC")
+                userInfo[testEvents[x-1]] = String(rankRowToRankId[thePickerView.selectedRow(inComponent: 0)]!)
             }
         }
     }
@@ -242,14 +301,39 @@ class Form: UIViewController {
         }
         return true
     }
-    /*
-    func clearCache(){
-        eventOptions = [:]
-        eventPictures = []
-        submitInfo = [:]
-        eventInfo = [:]
-        userInfo = [:]
-        profileFields = [[:]]
+    
+
+
+    
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
     }
- */
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return scrollViewValuesByTag[pickerView.tag]!.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        let titleData = scrollViewValuesByTag[pickerView.tag]![row]
+        let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
+        return myTitle
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//        if pickerView.tag == 0 {
+//            tempSelectedEvent = pickerData[row]
+//            tempSelectedSubevent = events[tempSelectedEvent]![0]
+//            subeventScroll.reloadAllComponents()
+//        }
+//        else {
+//            tempSelectedSubevent = events[tempSelectedEvent]![row]
+//        }
+    }
+    
+    func pickerView(pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        //Tag 0 represents the event scroller and tag 1 represents the subevent scroller
+        let titleData = scrollViewValuesByTag[pickerView.tag]![row]
+        let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
+        return myTitle
+    }
 }

@@ -2,9 +2,9 @@ import UIKit
 
 struct AppConfig {
     
-    static let dvidsApiPublicKey = "key-57e0326f67084"
+    static let dvidsApiPublicKey = "key-58a361f745cf7"
     
-    static let dvidsApiSecretKey = "7e168d7d7c73ae4564ce2255e0922c1dd98c5857"
+    static let dvidsApiSecretKey = "0dfeb29c94a4d72a7fff137c501c1af7ad84783c"
     
     static let tintColor = #colorLiteral(red: 1, green: 0.5781051517, blue: 0, alpha: 1)
     

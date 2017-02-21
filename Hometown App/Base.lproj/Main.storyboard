@@ -45,10 +45,10 @@
             </objects>
             <point key="canvasLocation" x="-3236" y="99"/>
         </scene>
-        <!--View Controller-->
+        <!--Home Screen View Controller-->
         <scene sceneID="1hH-qw-VvU">
             <objects>
-                <viewController id="UKG-43-kuT" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HomeScreenViewController" id="UKG-43-kuT" customClass="HomeScreenViewController" customModule="Hometown_App" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="L3C-Ed-Jmy"/>
                         <viewControllerLayoutGuide type="bottom" id="kud-Di-RuG"/>
@@ -691,9 +691,9 @@
         <image name="background.png" width="640" height="1136"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="3lI-MO-kKQ"/>
-        <segue reference="EmV-8o-GDU"/>
-        <segue reference="uMV-2M-TN2"/>
         <segue reference="BVA-2z-xY3"/>
+        <segue reference="EmV-8o-GDU"/>
+        <segue reference="3lI-MO-kKQ"/>
+        <segue reference="NPp-bM-p9w"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -18,6 +18,14 @@ class StartViewController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(StartViewController.login))
         LogInImage.addGestureRecognizer(tap)
         LogInImage.isUserInteractionEnabled = true
+        
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if UserDefaultsKeys.oauthRefreshTokenExpiresAt.dateGreaterThan(date: Date()) {
+            self.performSegue(withIdentifier: "TempLogInSegue", sender: nil)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -25,9 +33,8 @@ class StartViewController: UIViewController {
     }
     
     func login(){
-        self.performSegue(withIdentifier: "TempLogInSegue", sender: nil)
-        //NotificationNames.appOpenedWithUrl.add(observer: self, selector: #selector(onAppOpenedWithUrl(_:)))
-        //presentSafariViewController(url: DvidsOauth.authorizeUrl)
+        NotificationNames.appOpenedWithUrl.add(observer: self, selector: #selector(onAppOpenedWithUrl(_:)))
+        presentSafariViewController(url: DvidsOauth.authorizeUrl)
     }
 
     func onAppOpenedWithUrl(_ notification: Notification) {
@@ -41,7 +48,7 @@ class StartViewController: UIViewController {
                 
                 OperationQueue.main.addOperation {
                     if success {
-                        s.dismiss(animated: true, completion: nil)                        
+                        s.dismiss(animated: true, completion: nil)
                         if #available(iOS 10.0, *) { } else {
                             UIApplication.shared.statusBarStyle = .lightContent
                         }
